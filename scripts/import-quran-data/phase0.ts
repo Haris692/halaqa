@@ -307,11 +307,13 @@ async function loadCpfair(): Promise<CpfairEntry[]> {
   const json = join(dir, 'Husary_Muallim_128kbps.json')
   await download(CPFAIR_ZIP, zip)
   if (!existsSync(json)) {
-    // Sous Windows, on force le bsdtar du système (il lit les .zip ; le tar GNU de Git Bash non).
-    const tar = process.platform === 'win32' ? 'C:\\Windows\\System32\\tar.exe' : 'tar'
-    execFileSync(tar, ['-xf', 'quran-align-data.zip', 'Husary_Muallim_128kbps.json', 'LICENSE', 'README'], {
-      cwd: dir,
-    })
+    const files = ['Husary_Muallim_128kbps.json', 'LICENSE', 'README']
+    if (process.platform === 'win32') {
+      // bsdtar du système : il lit les .zip (le tar GNU de Git Bash, non)
+      execFileSync('C:\\Windows\\System32\\tar.exe', ['-xf', 'quran-align-data.zip', ...files], { cwd: dir })
+    } else {
+      execFileSync('unzip', ['-o', '-q', 'quran-align-data.zip', ...files], { cwd: dir })
+    }
   }
   const data = JSON.parse(await readFile(json, 'utf8')) as CpfairEntry[]
   if (data.length !== 6236) throw new Error(`cpfair : 6236 versets attendus, ${data.length} reçus`)
