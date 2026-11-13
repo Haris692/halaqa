@@ -34,7 +34,9 @@ export const VerseText = memo(function VerseText({
   return (
     <div data-verse={key} className="quran relative">
       <span className={verseActive ? 'verse-hl' : undefined}>
-        {verse.words.map((w) => {
+        {verse.words.map((w, i) => {
+          // espace insécable après le dernier mot : le numéro du verset ne part jamais seul à la ligne
+          const space = i === verse.words.length - 1 ? ' ' : ' '
           const id = wordId(surah, verse.n, w.p)
           const classes = [
             'cursor-pointer rounded-[0.2em] transition-colors duration-75',
@@ -49,7 +51,8 @@ export const VerseText = memo(function VerseText({
                 onClick={onWordClick ? (e) => onWordClick(id, e) : undefined}
               >
                 {splitClusters ? <ClusterSpans text={w.t} /> : w.t}
-              </span>{' '}
+              </span>
+              {space}
             </span>
           )
         })}

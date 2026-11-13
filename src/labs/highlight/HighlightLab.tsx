@@ -74,6 +74,23 @@ export function HighlightLab() {
     [player],
   )
 
+  const playButtons = (
+    <>
+      {snapshot.status === 'playing' ? (
+        <Button onClick={() => player?.pause()}>{t('highlight.pause')}</Button>
+      ) : snapshot.status === 'waiting' && snapshot.waitingFor === 'click' ? (
+        <Button onClick={() => player?.continueAfterWait()}>{t('highlight.continue')}</Button>
+      ) : (
+        <Button onClick={() => player?.play()} disabled={!player}>
+          {t('highlight.play')}
+        </Button>
+      )}
+      <Button variant="ghost" onClick={() => player?.playFromVerse(range[0])} disabled={!player}>
+        {t('highlight.restart')}
+      </Button>
+    </>
+  )
+
   const verseOptions = order.map((k, i) => ({ value: i, label: k }))
   const showVerse = true
   const showWord = level !== 'verse'
@@ -115,20 +132,7 @@ export function HighlightLab() {
         <div className="flex flex-col gap-4">
           <Panel title={t('highlight.playback')}>
             <div className="flex flex-col gap-3">
-              <div className="flex flex-wrap gap-2">
-                {snapshot.status === 'playing' ? (
-                  <Button onClick={() => player?.pause()}>{t('highlight.pause')}</Button>
-                ) : snapshot.status === 'waiting' && snapshot.waitingFor === 'click' ? (
-                  <Button onClick={() => player?.continueAfterWait()}>{t('highlight.continue')}</Button>
-                ) : (
-                  <Button onClick={() => player?.play()} disabled={!player}>
-                    {t('highlight.play')}
-                  </Button>
-                )}
-                <Button variant="ghost" onClick={() => player?.playFromVerse(range[0])} disabled={!player}>
-                  {t('highlight.restart')}
-                </Button>
-              </div>
+              <div className="flex flex-wrap gap-2">{playButtons}</div>
               <p className="text-xs text-ink/60">{t('highlight.tapWord')}</p>
               <Field label={t('highlight.speed')}>
                 <Segmented
@@ -247,6 +251,11 @@ export function HighlightLab() {
           </div>
         )}
       </Panel>
+
+      {/* Sur téléphone, les commandes sont sous le texte : barre de lecture toujours accessible */}
+      <div className="sticky bottom-0 z-20 -mx-4 flex gap-2 border-t border-gold-soft bg-paper/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        {playButtons}
+      </div>
     </div>
   )
 }
