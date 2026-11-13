@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #f7f1e3;
+  --color-paper-deep: #efe5cf;
+  --color-ink: #1d1a14;
+  --color-green-deep: #1f4d3a;
+  --color-green-soft: #2f6b52;
+  --color-gold: #b8893b;
+  --color-gold-soft: #e7d3a6;
+  --color-hl-verse: #fdf0b3;
+  --color-hl-word: #f9d649;
+  --color-hl-letter: #f59e0b;
+
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-quran: 'QPC Hafs', 'Amiri Quran', serif;
+}
+
+@font-face {
+  font-family: 'QPC Hafs';
+  src: url('/fonts/qpc-hafs/UthmanicHafs1Ver18.woff2') format('woff2');
+  font-display: block;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
+}
+
+.quran {
+  font-family: var(--font-quran);
+  direction: rtl;
+  line-height: 2.1;
+  /* ne jamais laisser le navigateur synthétiser ou remplacer des glyphes */
+  font-synthesis: none;
+  font-variant-ligatures: normal;
+}
+
+.verse-hl {
+  background: var(--color-hl-verse);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 0.2em;
+}
+
+.word-hl {
+  background: var(--color-hl-word);
+  border-radius: 0.2em;
+}
+
+/* Approche B : la lettre active est colorée via son propre <span> */
+.cluster-hl {
+  background: var(--color-hl-letter);
+}
+
+/* Approche A : rectangle dessiné à partir de Range.getClientRects, mélangé
+   en « multiply » pour rester visuellement derrière l'encre du texte */
+.letter-overlay {
+  position: absolute;
+  background: var(--color-hl-letter);
+  mix-blend-mode: multiply;
+  border-radius: 0.15em;
+  pointer-events: none;
+}
+
+/* Marquages de mots (ancrés au mot : alignés quel que soit l'écran ou le zoom) */
+.mark-highlight-red { background: rgb(220 38 38 / 0.22); }
+.mark-highlight-green { background: rgb(22 163 74 / 0.22); }
+.mark-highlight-blue { background: rgb(37 99 235 / 0.2); }
+.mark-highlight-yellow { background: rgb(234 179 8 / 0.35); }
+[class*='mark-underline-'] { border-bottom: 0.08em solid; }
+.mark-underline-red { border-color: #dc2626; }
+.mark-underline-green { border-color: #16a34a; }
+.mark-underline-blue { border-color: #2563eb; }
+.mark-underline-yellow { border-color: #eab308; }
+/* marquage posé par l'élève (binôme) : distinct de ceux du prof */
+.mark-student { outline: 0.05em dashed rgb(29 26 20 / 0.6); outline-offset: 0.05em; }
+.mark-pending { outline: 0.08em solid var(--color-gold); }

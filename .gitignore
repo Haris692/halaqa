@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.local
+.env
+.env.*
+!.env.example
+scripts/import-quran-data/raw/
+coverage/
+test-results/
+playwright-report/
+.claude/settings.local.json
+
+# Retéléchargés par scripts/import-quran-data (licences à confirmer, cf. docs/architecture.md)
+public/audio/
+public/fonts/

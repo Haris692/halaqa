@@ -1,0 +1,7 @@
+{
+  "appName": "Halaqa",
+  "tagline": "Le cercle d'étude du Coran",
+  "loading": "Chargement…",
+  "loadError": "Impossible de charger les données : {{message}}",
+  "back": "Retour"
+}
