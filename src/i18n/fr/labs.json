@@ -30,7 +30,7 @@
     "settings": "Réglages",
     "surah": "Sourate",
     "surahName": { "1": "Al-Fatiha", "112": "Al-Ikhlas" },
-    "source": "Source du minutage",
+    "source": "Récitateur",
     "sourceQdc": "quran.com / QUL — sourate entière",
     "sourceCpfair": "cpfair (CC BY 4.0) — verset par verset",
     "level": "Niveau de surlignage",

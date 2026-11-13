@@ -11,19 +11,26 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "import:phase0": "node --experimental-strip-types scripts/import-quran-data/phase0.ts"
+    "import": "node --experimental-strip-types scripts/import-quran-data/index.ts",
+    "import:media": "node --experimental-strip-types scripts/import-quran-data/media.ts"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "cn": "^0.5.2",
     "i18next": "^27.1.1",
     "lucide-react": "^1.72.0",
     "perfect-freehand": "^1.2.3",
+    "radix-ui": "^1.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^18.0.1",
     "react-router": "^7.18.5",
+    "shadcn": "^4.23.0",
     "tailwind-merge": "^3.7.0",
+    "tw-animate-css": "^1.4.0",
     "zustand": "^5.1.0"
   },
   "devDependencies": {

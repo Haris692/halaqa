@@ -24,13 +24,22 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # Les données coraniques (public/quran) sont versionnées : les tests les vérifient.
       - run: npm test
-      # Audio et polices ne sont pas versionnés : on les retélécharge à chaque build.
-      - run: npm run import:phase0
+      - run: npm run typecheck
+      # Polices (604 pages) et audio hébergé ne sont pas versionnés (licences à confirmer) :
+      # téléchargés une fois puis mis en cache entre deux déploiements.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            public/fonts
+            public/audio
+          key: media-${{ hashFiles('scripts/import-quran-data/sources.ts', 'scripts/import-quran-data/media.ts') }}
+      - run: npm run import:media
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
-      # Repli SPA : les liens directs (/halaqa/labs/…) chargent l'application.
+      # Repli SPA : les liens directs (/halaqa/lire/…) chargent l'application.
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5

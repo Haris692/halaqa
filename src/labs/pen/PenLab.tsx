@@ -30,7 +30,7 @@ import {
 import { wordId, type SurahText, type VerseKey, type WordId } from '@/core/quran/types'
 import { findFrame, useStrokeGeometry, verseRects, wordRects } from '@/features/annotations/geometry'
 import { StrokeLayer } from '@/features/annotations/StrokeLayer'
-import { MushafPageView } from '@/features/reader/MushafPageView'
+import { MushafPageView, PAGE_WIDTH } from '@/features/reader/MushafPageView'
 import { VerseText } from '@/features/reader/VerseText'
 import { asset } from '@/lib/asset'
 import { useAsync } from '@/lib/useAsync'
@@ -85,7 +85,9 @@ export function PenLab() {
     }
     dispatch(m)
   })
-  useEffect(() => send({ t: 'sync-request', from: selfId }), [send, selfId])
+  useEffect(() => {
+    send({ t: 'sync-request', from: selfId })
+  }, [send, selfId])
 
   const emit = useCallback(
     (m: AnnotationMessage) => {
@@ -123,7 +125,7 @@ export function PenLab() {
   const texts = useMemo(() => new Map<number, SurahText>(ready ? ready[3].map((s) => [s.surah, s]) : []), [ready])
   const page = ready ? (view.page === 1 ? ready[1] : ready[2]) : null
   const pageSurahs = useMemo(
-    () => (page ? [...new Set(page.lines.flatMap((l) => (l.type === 'text' ? [Number(l.words[0]!.split(':')[0])] : [])))] : []),
+    () => (page ? [...new Set(page.lines.flatMap((l) => (l.type === 'text' ? [Number(l.words[0]!.k.split(':')[0])] : [])))] : []),
     [page],
   )
   const wordOrder = useMemo<WordId[]>(
@@ -332,10 +334,10 @@ export function PenLab() {
               {view.mode === 'mushaf' ? (
                 <MushafPageView
                   page={page}
-                  texts={texts}
+                  basmala={texts.get(1)?.verses[0]?.words ?? []}
                   meta={ready[0]}
                   font={view.font}
-                  scale={view.zoom}
+                  width={PAGE_WIDTH * view.zoom}
                   wordClass={wordClass}
                   onWordClick={onWordClick}
                 />

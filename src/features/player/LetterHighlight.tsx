@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import { letterIndexAt, splitLetters, wordProgress, ZWJ, type LetterCluster } from '@/core/audio-sync/letters'
 import type { RecitationPlayer } from '@/services/audio/recitation-player'
+import { rangeForOffsets, wordText } from './dom-range'
 
 /**
  * Surlignage de la lettre en cours. Les deux approches à comparer en phase 0 :
@@ -59,10 +60,9 @@ export function RangeLetterOverlay({
         return
       }
       const el = findWord(container, word.verse, word.position)
-      const text = el?.firstChild
-      if (!el || !(text instanceof Text)) return
+      if (!el) return
       const id = `${word.verse}:${word.position}`
-      const clusters = clustersOf(id, text.data)
+      const clusters = clustersOf(id, wordText(el))
       const idx = letterIndexAt(clusters, wordProgress(ms, word.start, word.end))
       const cluster = clusters[idx]
       if (!cluster) return
@@ -71,8 +71,7 @@ export function RangeLetterOverlay({
       if (key === lastKey) return
       lastKey = key
 
-      range.setStart(text, cluster.start)
-      range.setEnd(text, cluster.end)
+      if (!rangeForOffsets(el, cluster.start, cluster.end, range)) return
       const rects = Array.from(range.getClientRects())
       const base = layer.getBoundingClientRect()
       rects.forEach((r, i) => {

@@ -1,20 +1,36 @@
 # Crédits et licences
 
-État au 13/11/2026 (phase 0). Chaque ressource sera revérifiée avant la mise en ligne.
+État au 13/11/2026 (phase 1). Chaque ressource sera revérifiée avant d'ouvrir la plateforme aux élèves.
+
+Légende : ✓ licence claire · ⚠ à confirmer
+
+## Texte coranique et mise en page
 
 | Ressource | Source | Licence / conditions | Statut |
 |---|---|---|---|
-| Texte coranique (QPC Hafs, mot à mot) | Complexe du Roi Fahd (KFGQPC), récupéré via l'API publique de quran.com (`api.qurancdn.com`), identique à QUL | Reproduction sans modification. QUL n'indique pas de licence explicite | ⚠ à confirmer |
-| Minutage Husary Mu'allim (sourate entière) | quran.com / [QUL](https://qul.tarteel.ai/resources/recitation/334) | QUL : « pas d'information de copyright » | ⚠ à confirmer |
-| Minutage Husary Mu'allim (verset par verset) | [cpfair/quran-align](https://github.com/cpfair/quran-align), © 2016 Collin Fair | **CC BY 4.0** : attribution requise | ✓ |
-| Audio Mahmoud Khalil Al-Husary (Mu'allim) | `download.quranicaudio.com` (sourate entière), [everyayah.com](https://everyayah.com) (verset par verset) | Pas de licence explicite trouvée | ⚠ à confirmer |
-| Police KFGQPC Uthmanic Hafs (`UthmanicHafs1Ver18`) | Complexe du Roi Fahd, via le CDN de quran.com | Gratuite mais propriétaire : pas de reproduction ni de modification sans accord écrit | ⚠ usage privé en attendant ; solution de secours : Amiri Quran (SIL OFL) |
-| Polices QPC V2 par page (`p1`, `p604`) | Complexe du Roi Fahd, via le CDN de quran.com | Idem | ⚠ idem |
-| Noms des sourates (arabe, translittération, français) | API de quran.com | À vérifier | ⚠ |
+| Texte QPC Hafs mot à mot, mise en page des 604 pages, découpage juz/hizb | Complexe du Roi Fahd (KFGQPC), via l'API publique de quran.com (identique à [QUL](https://qul.tarteel.ai)) | Reproduction sans modification. QUL n'indique pas de licence explicite | ⚠ |
+| Règles de tajwid par mot | quran.com (`text_uthmani_tajweed`) | Pas de licence explicite. Les règles sont reportées sur le texte QPC sans le modifier (alignement lettre par lettre, vérifié par les tests) | ⚠ |
+| Police KFGQPC Uthmanic Hafs + 604 polices QPC V2 | Complexe du Roi Fahd, via le CDN de quran.com | « Gratuite mais propriétaire » : pas de reproduction ni de modification sans accord écrit. Usage privé en attendant ; solution de secours : Amiri Quran (SIL OFL) | ⚠ |
 
-Prévu pour la phase 1 : traductions françaises (Hamidullah, Rashid Maash, Noor International) et Mukhtasar en français, depuis [QuranEnc](https://quranenc.com). Conditions : pas de modification, citer QuranEnc et la version, mettre à jour vers la dernière version, pas de publicité inappropriée.
+## Récitations
+
+| Ressource | Source | Licence / conditions | Statut |
+|---|---|---|---|
+| Mahmoud Khalil Al-Husary (Mu'allim, Murattal), Muhammad Siddiq Al-Minshawi, Mishari Al-Afasy : audio et minutage mot à mot | quran.com / QUL (`download.quranicaudio.com`, `audio.qurancdn.com`) | Pas de licence explicite. Audio de Husary Mu'allim pour al-Fatiha et le Juz 'Amma hébergé chez nous ; le reste lu depuis la source | ⚠ |
+| Minutage mot à mot (labos de la phase 0) | [cpfair/quran-align](https://github.com/cpfair/quran-align), © 2016 Collin Fair | **CC BY 4.0** : attribution requise | ✓ |
+
+## Traductions et tafsirs
+
+| Ressource | Source | Licence / conditions | Statut |
+|---|---|---|---|
+| Traduction de Rachid Maach (v1.0.3) | [QuranEnc](https://quranenc.com/fr/browse/french_rashid) | Republication autorisée sans modification, en citant QuranEnc et la version, avec mise à jour vers la dernière version, sans publicité inappropriée | ✓ |
+| Traduction du Centre international Noor, Dr Nabil Rudwan (v1.0.0) | [QuranEnc](https://quranenc.com/fr/browse/french_montada) | Idem | ✓ |
+| Traduction de Muhammad Hamidullah | [QuranEnc](https://quranenc.com/fr/browse/french_hameedullah) | Idem, mais n'apparaît plus dans la liste publique de QuranEnc | ⚠ |
+| Al-Mukhtasar en français (Centre Tafsir pour les études coraniques) | [QuranEnc](https://quranenc.com/fr/browse/french_mokhtasar) | Idem, mais n'apparaît plus dans la liste publique de QuranEnc | ⚠ |
+| Tafsir al-Muyassar (arabe) | Complexe du Roi Fahd, via quran.com | Pas de licence explicite | ⚠ |
 
 ## Bibliothèques
 
 - [perfect-freehand](https://github.com/steveruizok/perfect-freehand) — MIT
-- React, React Router, Zustand, i18next, Tailwind CSS, Vite, Vitest — MIT
+- React, React Router, Zustand, i18next, Tailwind CSS, Vite, Vitest, shadcn/ui, Radix UI, Lucide — MIT
+- Police d'interface Geist (via Fontsource) — SIL OFL

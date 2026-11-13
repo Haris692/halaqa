@@ -1,61 +1,65 @@
 import { memo, useEffect, useState } from 'react'
-import type { MushafPage, QuranWord, SurahMeta, SurahText, WordId } from '@/core/quran/types'
+import type { MaskLevel } from '@/core/memorization/memorization'
+import type { MushafPage, QuranWord, SurahMeta, VerseKey, WordId } from '@/core/quran/types'
+import { cn } from '@/lib/utils'
 import { loadPageFont } from '@/services/quran-data'
 
 export type MushafFont = 'v2' | 'unicode'
 
-/** Largeur de référence d'une page, multipliée par `scale`. */
+/** Largeur de référence d'une page (le zoom des labos multiplie cette valeur). */
 export const PAGE_WIDTH = 460
 const LINE_HEIGHT_RATIO = 0.105 // hauteur d'une ligne / largeur de page
 const FONT_RATIO: Record<MushafFont, number> = { v2: 0.06, unicode: 0.05 }
 
 export interface MushafPageViewProps {
   page: MushafPage
-  texts: ReadonlyMap<number, SurahText>
   meta: readonly SurahMeta[]
+  /** mots de la basmala (1:1), affichée en tête des sourates */
+  basmala: readonly QuranWord[]
   font: MushafFont
-  scale: number
+  /** largeur de la page en pixels */
+  width: number
+  activeVerse?: VerseKey | null
+  activeWord?: WordId | null
+  selectedVerse?: VerseKey | null
+  /** en glyphes V2, « première lettre » n'est pas possible : traité comme « estompé » */
+  mask?: MaskLevel
   wordClass?: (id: WordId) => string | undefined
   onWordClick?: (id: WordId, event: React.MouseEvent) => void
+  onVerseNumberClick?: (key: VerseKey) => void
 }
 
 /**
- * Page du Mushaf en mise en page figée (15 lignes). Tout est proportionnel à la
- * largeur de la page : à n'importe quel zoom, un point (x, y) normalisé 0–1
- * désigne le même endroit du texte.
+ * Page du Mushaf de Médine en mise en page figée (15 lignes). Tout est
+ * proportionnel à la largeur : à n'importe quelle taille, un point (x, y)
+ * normalisé 0–1 désigne le même endroit du texte.
  */
 export const MushafPageView = memo(function MushafPageView({
   page,
-  texts,
   meta,
+  basmala,
   font,
-  scale,
+  width,
+  activeVerse = null,
+  activeWord = null,
+  selectedVerse = null,
+  mask = 'full',
   wordClass,
   onWordClick,
+  onVerseNumberClick,
 }: MushafPageViewProps) {
-  const width = PAGE_WIDTH * scale
   const lineHeight = width * LINE_HEIGHT_RATIO
   const fontSize = width * FONT_RATIO[font]
   const pageFont = usePageFont(font === 'v2' ? page.page : null)
   const basmalaFont = usePageFont(font === 'v2' ? 1 : null)
   const centered = page.page <= 2
-
-  const wordOf = (key: string): { word: QuranWord; isEnd: boolean } | null => {
-    const [s, v, p] = key.split(':')
-    const verse = texts.get(Number(s))?.verses.find((x) => x.n === Number(v))
-    if (!verse) return null
-    if (p === 'end') return { word: verse.end, isEnd: true }
-    const word = verse.words.find((w) => w.p === Number(p))
-    return word ? { word, isEnd: false } : null
-  }
-
   const family = font === 'v2' ? (pageFont ? `'${pageFont}'` : 'transparent') : 'var(--font-quran)'
-  const basmala = texts.get(1)?.verses[0]?.words ?? []
+  const maskClass = mask === 'full' ? undefined : mask === 'first' && font === 'v2' ? 'mask-faded' : `mask-${mask}`
 
   return (
     <div
       data-page={page.page}
-      className="relative mx-auto rounded-md border border-gold/60 bg-[#fffaf0] shadow-md"
+      className={cn('relative mx-auto rounded-md border border-gold/60 bg-[var(--mushaf-page)] shadow-md', maskClass)}
       style={{ width, padding: `${lineHeight * 0.5}px ${width * 0.05}px`, fontSize }}
     >
       {page.lines.map((line) => {
@@ -90,35 +94,49 @@ export const MushafPageView = memo(function MushafPageView({
           <div
             key={line.n}
             style={{ ...style, fontFamily: family }}
-            className={`quran flex whitespace-nowrap ${centered ? 'justify-center gap-[0.25em]' : 'justify-between'}`}
+            className={cn('quran flex whitespace-nowrap', centered ? 'justify-center gap-[0.25em]' : 'justify-between')}
           >
-            {line.words.map((key) => {
-              const found = wordOf(key)
-              if (!found) return null
-              const text = font === 'v2' ? found.word.g : found.word.t
-              if (found.isEnd) {
+            {line.words.map((w) => {
+              const [s, v] = w.k.split(':')
+              const vk = `${s}:${v}` as VerseKey
+              if (w.e) {
+                // marqueur de fin : glyphe V2 si disponible, sinon numéro Unicode en police QPC
+                const useUnicode = font === 'unicode' || !w.g
                 return (
-                  <span key={key} className="text-green-deep select-none">
-                    {text}
-                  </span>
+                  <button
+                    key={w.k}
+                    type="button"
+                    onClick={onVerseNumberClick ? () => onVerseNumberClick(vk) : undefined}
+                    className={cn('rounded-full text-green-deep select-none', selectedVerse === vk && 'bg-gold-soft ring-2 ring-gold')}
+                    style={useUnicode ? { fontFamily: 'var(--font-quran)' } : undefined}
+                    aria-label={`Verset ${v}`}
+                  >
+                    {useUnicode ? w.t : w.g}
+                  </button>
                 )
               }
-              const id = key as WordId
+              const id = w.k as WordId
               return (
                 <span
-                  key={key}
+                  key={w.k}
                   data-w={id}
-                  className={`cursor-pointer rounded-[0.15em] ${wordClass?.(id) ?? ''}`}
+                  className={cn(
+                    'rounded-[0.15em]',
+                    onWordClick && 'cursor-pointer',
+                    activeVerse === vk && 'verse-hl',
+                    activeWord === id && 'word-hl',
+                    wordClass?.(id),
+                  )}
                   onClick={onWordClick ? (e) => onWordClick(id, e) : undefined}
                 >
-                  {text}
+                  {font === 'v2' ? w.g : w.t}
                 </span>
               )
             })}
           </div>
         )
       })}
-      <div className="text-center font-ui text-xs text-ink/50" style={{ fontSize: fontSize * 0.45 }}>
+      <div className="text-center font-ui text-muted-foreground" style={{ fontSize: fontSize * 0.45 }}>
         {page.page}
       </div>
     </div>
@@ -130,6 +148,7 @@ function usePageFont(page: number | null): string | null {
   useEffect(() => {
     if (page === null) return setFamily(null)
     let alive = true
+    setFamily(null)
     loadPageFont(page).then(
       (f) => alive && setFamily(f),
       () => alive && setFamily(null),

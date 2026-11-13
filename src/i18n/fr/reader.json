@@ -1,0 +1,112 @@
+{
+  "versesCount_one": "{{count}} verset",
+  "versesCount_other": "{{count}} versets",
+  "meccan": "mecquoise",
+  "medinan": "médinoise",
+  "wordTapHint": "Touchez un mot pour l'écouter seul, un numéro de verset pour afficher sa traduction et son tafsir.",
+  "toolbar": {
+    "home": "Accueil",
+    "reading": "Mode lecture (verset par verset)",
+    "mushaf": "Mode Mushaf (pages)",
+    "memorize": "Mémoriser : masquer le texte",
+    "tajweed": "Coloration tajwid",
+    "tajweedReadingOnly": "Coloration tajwid disponible en mode lecture",
+    "commentary": "Traduction et tafsir",
+    "settings": "Réglages"
+  },
+  "mask": {
+    "full": "Texte complet",
+    "faded": "Estompé",
+    "first": "1re lettre",
+    "hidden": "Masqué",
+    "hint": "Touchez un mot masqué pour le révéler un instant.",
+    "mushafFirst": "En mode Mushaf, « 1re lettre » est affiché comme « estompé » (la police du Mushaf dessine chaque mot d'un seul bloc)."
+  },
+  "player": {
+    "prev": "Verset précédent",
+    "next": "Verset suivant",
+    "play": "Lire",
+    "pause": "Pause",
+    "continue": "Continuer",
+    "yourTurn": "À vous de répéter…",
+    "verseOf": "Verset {{current}}/{{total}}",
+    "options": "Options de lecture",
+    "reciter": "Récitateur",
+    "speed": "Vitesse",
+    "highlight": "Surlignage",
+    "hlVerse": "Verset",
+    "hlWord": "Mot",
+    "hlLetter": "Lettre",
+    "repeat": "Répéter chaque verset",
+    "pauseAfter": "Pause après chaque verset (pour répéter)",
+    "pauseNone": "Aucune",
+    "pauseSeconds": "{{n}} secondes",
+    "pauseClick": "Attendre mon clic",
+    "from": "Du verset",
+    "to": "au verset",
+    "loop": "Boucler",
+    "autoScroll": "Suivre le verset en cours"
+  },
+  "commentary": {
+    "title": "Traduction et tafsir",
+    "verseTitle": "{{surah}}, verset {{verse}}",
+    "translation": "Traduction",
+    "tafsir": "Tafsir",
+    "group": "Commentaire commun aux versets {{from}} à {{to}}.",
+    "missing": "Pas de texte pour ce verset dans cette source.",
+    "source": "Source"
+  },
+  "nav": {
+    "searchPlaceholder": "Numéro, nom arabe, français ou translittéré…",
+    "search": "Rechercher une sourate",
+    "noResult": "Aucune sourate trouvée.",
+    "goTo": "Aller à…",
+    "surah": "Sourate",
+    "juz": "Juz",
+    "hizb": "Hizb",
+    "page": "Page",
+    "pagePlaceholder": "Page (1 à {{max}})",
+    "go": "Aller"
+  },
+  "settings": {
+    "title": "Réglages",
+    "saved": "Enregistrés sur cet appareil.",
+    "theme": "Affichage",
+    "themeLight": "Clair",
+    "themeDark": "Nuit",
+    "themeContrast": "Contraste élevé",
+    "fontSize": "Taille du texte ({{px}} px)",
+    "pinchHint": "Sur téléphone ou tablette, pincez le texte avec deux doigts pour zoomer.",
+    "tajweed": "Coloration tajwid",
+    "tajweedOnly": "Règles colorées",
+    "tajweedAll": "Toutes les règles",
+    "tajweedNote": "Mode lecture uniquement. Couleurs indicatives : à valider par votre professeur.",
+    "reset": "Rétablir les réglages par défaut"
+  },
+  "tajweed": {
+    "madd": "Madd (prolongation)",
+    "ghunna": "Ghunna (nasalisation)",
+    "qalqala": "Qalqala (rebond)",
+    "ikhfa": "Ikhfâ' (dissimulation)",
+    "idgham": "Idghâm (assimilation)",
+    "iqlab": "Iqlâb (conversion)",
+    "silent": "Lettres muettes"
+  },
+  "mushaf": {
+    "pageTitle": "Page {{page}}",
+    "next": "Page suivante",
+    "prev": "Page précédente",
+    "hint": "Balayez ou utilisez les flèches pour tourner les pages. Pincez pour zoomer."
+  },
+  "home": {
+    "resume": "Reprendre la lecture",
+    "verse": "verset {{n}}",
+    "continue": "Reprendre",
+    "openMushaf": "Ouvrir le Mushaf",
+    "goTo": "Aller à un juz, un hizb, une page",
+    "training": "S'entraîner seul (mémorisation)",
+    "surahs": "Les 114 sourates",
+    "credits": "Texte : Complexe du Roi Fahd · Audio et minutage : quran.com · Traductions : QuranEnc",
+    "labs": "Prototypes (phase 0)"
+  }
+}

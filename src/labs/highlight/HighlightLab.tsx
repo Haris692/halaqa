@@ -8,7 +8,7 @@ import { RangeLetterOverlay, useClusterSpanHighlight } from '@/features/player/L
 import { useRecitationPlayer } from '@/features/player/useRecitationPlayer'
 import { VerseText } from '@/features/reader/VerseText'
 import { useAsync } from '@/lib/useAsync'
-import { loadRecitation, loadSurah, type RecitationId } from '@/services/quran-data'
+import { loadReciters, loadRecitation, loadSurah } from '@/services/quran-data'
 import { Button, Field, Panel, Segmented, Select, Slider } from '../ui'
 import { JoiningBench } from './JoiningBench'
 
@@ -27,7 +27,8 @@ function toPause(choice: PauseChoice): PauseAfterVerse {
 export function HighlightLab() {
   const { t } = useTranslation('labs')
   const [surah, setSurah] = useState<(typeof SURAHS)[number]>(1)
-  const [source, setSource] = useState<RecitationId>('husary-muallim-qdc')
+  const [source, setSource] = useState('husary-muallim')
+  const reciters = useAsync(loadReciters, [])
   const [level, setLevel] = useState<Level>('letter')
   const [approach, setApproach] = useState<Approach>('range')
   const [fontSize, setFontSize] = useState(44)
@@ -43,7 +44,9 @@ export function HighlightLab() {
   const recitation = data.status === 'ready' ? data.value[1] : null
 
   const order = useMemo<VerseKey[]>(() => (text ? text.verses.map((v) => verseKey(surah, v.n)) : []), [text, surah])
-  useEffect(() => setRange([0, Math.max(0, order.length - 1)]), [order.length])
+  useEffect(() => {
+    setRange([0, Math.max(0, order.length - 1)])
+  }, [order.length])
 
   const timeline = useMemo(() => (recitation ? buildTimeline(recitation, order) : null), [recitation, order])
   const settings = useMemo<PlaybackSettings>(
@@ -51,7 +54,9 @@ export function HighlightLab() {
     [range, repeatEach, loop, pause],
   )
   const { player, snapshot } = useRecitationPlayer(timeline, order, settings)
-  useEffect(() => player?.setSpeed(speed), [player, speed])
+  useEffect(() => {
+    player?.setSpeed(speed)
+  }, [player, speed])
 
   const containerRef = useRef<HTMLDivElement>(null)
   const useSpans = level === 'letter' && approach === 'spans'
@@ -184,10 +189,7 @@ export function HighlightLab() {
                 <Select
                   value={source}
                   onChange={setSource}
-                  options={[
-                    { value: 'husary-muallim-qdc', label: t('highlight.sourceQdc') },
-                    { value: 'husary-muallim-cpfair', label: t('highlight.sourceCpfair') },
-                  ]}
+                  options={(reciters.status === 'ready' ? reciters.value : []).map((r) => ({ value: r.id, label: `${r.name} — ${r.style}` }))}
                 />
               </Field>
               <Field label={t('highlight.level')}>

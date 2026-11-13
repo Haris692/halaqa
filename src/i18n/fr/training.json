@@ -1,0 +1,57 @@
+{
+  "hub": {
+    "title": "S'entraîner",
+    "intro": "Écouter, lire, puis réciter de mémoire : le travail entre les séances, à votre rythme.",
+    "guidedTitle": "Entraînement guidé",
+    "guidedText": "Sur une portion : écoute répétée avec le texte, lecture à voix haute, puis récitation avec le texte masqué progressivement.",
+    "surah": "Sourate",
+    "from": "Du verset",
+    "to": "au verset",
+    "listenCount": "Écoutes de chaque verset",
+    "start": "Commencer",
+    "continueTitle": "Continue le verset",
+    "continueText": "Un verset tiré au hasard dans les sourates que vous avez apprises : poursuivez de mémoire, puis vérifiez.",
+    "addJuzAmma": "+ Juz 'Amma",
+    "addFatiha": "+ Al-Fatiha",
+    "clear": "Tout décocher",
+    "continueStart_one": "Lancer le test ({{count}} sourate)",
+    "continueStart_other": "Lancer le test ({{count}} sourates)"
+  },
+  "continue": {
+    "noLearned": "Choisissez d'abord les sourates que vous avez apprises.",
+    "chooseSurahs": "Choisir mes sourates",
+    "title": "Continue le verset",
+    "where": "{{surah}}, verset {{verse}}",
+    "instruction": "Récitez la suite de mémoire, puis affichez le verset pour vérifier.",
+    "listenStart": "Écouter le début",
+    "reveal": "Afficher le verset",
+    "known": "Je savais",
+    "review": "À revoir",
+    "openReader": "Ouvrir dans le lecteur"
+  },
+  "guided": {
+    "range": "versets {{from}} à {{to}}",
+    "done": "Portion terminée. Qu'Allah vous facilite la mémorisation.",
+    "again": "Recommencer",
+    "nextPortion": "Portion suivante",
+    "back": "Étape précédente",
+    "peek": "Voir le texte",
+    "hide": "Masquer à nouveau",
+    "finish": "Terminer",
+    "next": "Étape suivante",
+    "step": {
+      "listen": "Écouter ×{{n}}",
+      "read": "Lire à voix haute",
+      "recite_first": "Réciter (1re lettre)",
+      "recite_faded": "Réciter (estompé)",
+      "recite_hidden": "Réciter (masqué)"
+    },
+    "instruction": {
+      "listen": "Lancez la lecture : chaque verset est récité {{n}} fois. Suivez le texte des yeux et répétez à voix basse.",
+      "read": "Lisez la portion à voix haute, à votre rythme. Touchez un mot pour réécouter sa prononciation.",
+      "recite_first": "Seule la première lettre de chaque mot est visible. Récitez ; touchez un mot pour le révéler un instant.",
+      "recite_faded": "Le texte est estompé. Récitez de mémoire.",
+      "recite_hidden": "Le texte est entièrement masqué. Récitez de mémoire ; touchez un mot en cas de blocage."
+    }
+  }
+}

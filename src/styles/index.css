@@ -1,20 +1,10 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
 
-@theme {
-  --color-paper: #f7f1e3;
-  --color-paper-deep: #efe5cf;
-  --color-ink: #1d1a14;
-  --color-green-deep: #1f4d3a;
-  --color-green-soft: #2f6b52;
-  --color-gold: #b8893b;
-  --color-gold-soft: #e7d3a6;
-  --color-hl-verse: #fdf0b3;
-  --color-hl-word: #f9d649;
-  --color-hl-letter: #f59e0b;
-
-  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-quran: 'QPC Hafs', 'Amiri Quran', serif;
-}
+/* Thèmes : clair (défaut, papier crème), .dark (mode nuit), .contrast (contraste élevé) */
+@custom-variant dark (&:is(.dark *));
 
 @font-face {
   font-family: 'QPC Hafs';
@@ -22,12 +12,140 @@
   font-display: block;
 }
 
-html,
-body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-ui);
+@theme {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-green-deep: var(--green-deep);
+  --color-green-soft: var(--green-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-hl-verse: var(--hl-verse);
+  --color-hl-word: var(--hl-word);
+  --color-hl-letter: var(--hl-letter);
+  --font-ui: 'Geist Variable', system-ui, sans-serif;
+  --font-quran: 'QPC Hafs', 'Amiri Quran', serif;
 }
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --paper: #f7f1e3;
+  --paper-deep: #efe5cf;
+  --ink: #1d1a14;
+  --green-deep: #1f4d3a;
+  --green-soft: #2f6b52;
+  --gold: #b8893b;
+  --gold-soft: #e7d3a6;
+  --hl-verse: #fdf0b3;
+  --hl-word: #f9d649;
+  --hl-letter: #f59e0b;
+  --mushaf-page: #fffaf0;
+  --letter-blend: multiply;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #fffaf0;
+  --card-foreground: var(--ink);
+  --popover: #fffaf0;
+  --popover-foreground: var(--ink);
+  --primary: var(--green-deep);
+  --primary-foreground: #ffffff;
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-deep);
+  --muted-foreground: #6b6355;
+  --accent: var(--gold-soft);
+  --accent-foreground: var(--ink);
+  --destructive: #b91c1c;
+  --border: #e2d3b0;
+  --input: #e2d3b0;
+  --ring: var(--gold);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --paper: #14130f;
+  --paper-deep: #1f1d17;
+  --ink: #ece4d2;
+  --green-deep: #7cc4a1;
+  --green-soft: #5fae8b;
+  --gold: #d6b26a;
+  --gold-soft: #4a3f25;
+  --hl-verse: #3d3514;
+  --hl-word: #6f5a12;
+  --hl-letter: #c2410c;
+  --mushaf-page: #1b1a15;
+  --letter-blend: screen;
+
+  --card: #1b1a15;
+  --popover: #1b1a15;
+  --primary: #2f6b52;
+  --primary-foreground: #ffffff;
+  --muted-foreground: #a99f8a;
+  --border: #39342a;
+  --input: #39342a;
+}
+
+.contrast {
+  --paper: #ffffff;
+  --paper-deep: #f0f0f0;
+  --ink: #000000;
+  --green-deep: #0b3d26;
+  --gold: #000000;
+  --gold-soft: #d4d4d4;
+  --hl-verse: #fff176;
+  --hl-word: #ffd400;
+  --hl-letter: #ff8a00;
+  --mushaf-page: #ffffff;
+  --card: #ffffff;
+  --popover: #ffffff;
+  --muted-foreground: #222222;
+  --border: #000000;
+  --input: #000000;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-ui);
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* ---------- texte coranique ---------- */
 
 .quran {
   font-family: var(--font-quran);
@@ -35,37 +153,120 @@ body {
   line-height: 2.1;
   /* ne jamais laisser le navigateur synthétiser ou remplacer des glyphes */
   font-synthesis: none;
-  font-variant-ligatures: normal;
 }
 
 .verse-hl {
-  background: var(--color-hl-verse);
+  background: var(--hl-verse);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   border-radius: 0.2em;
 }
 
 .word-hl {
-  background: var(--color-hl-word);
+  background: var(--hl-word);
   border-radius: 0.2em;
 }
 
-/* Approche B : la lettre active est colorée via son propre <span> */
+/* Approche B (labo) : la lettre active est colorée via son propre <span> */
 .cluster-hl {
-  background: var(--color-hl-letter);
+  background: var(--hl-letter);
 }
 
 /* Approche A : rectangle dessiné à partir de Range.getClientRects, mélangé
-   en « multiply » pour rester visuellement derrière l'encre du texte */
+   pour rester visuellement derrière l'encre du texte */
 .letter-overlay {
   position: absolute;
-  background: var(--color-hl-letter);
-  mix-blend-mode: multiply;
+  background: var(--hl-letter);
+  mix-blend-mode: var(--letter-blend);
   border-radius: 0.15em;
   pointer-events: none;
 }
 
-/* Marquages de mots (ancrés au mot : alignés quel que soit l'écran ou le zoom) */
+/* ---------- mémorisation : masquage progressif ---------- */
+
+.mask-faded [data-w] {
+  opacity: 0.18;
+}
+.mask-hidden [data-w] {
+  color: transparent;
+  background: var(--paper-deep);
+  border-radius: 0.25em;
+}
+.mask-faded [data-w],
+.mask-hidden [data-w] {
+  transition:
+    opacity 0.4s,
+    color 0.4s,
+    background 0.4s;
+}
+.mask-faded [data-w].revealed,
+.mask-hidden [data-w].revealed,
+.mask-first [data-w].revealed {
+  opacity: 1;
+  color: inherit;
+  background: var(--hl-verse);
+  transition: none;
+}
+/* niveau « première lettre » : la suite du mot est rendue transparente */
+.mask-first [data-w] .mask-rest {
+  color: transparent;
+}
+.mask-first [data-w].revealed .mask-rest {
+  color: inherit;
+}
+
+/* ---------- tajwid (couleurs proches des conventions usuelles) ---------- */
+
+.tj-on .tj {
+  color: var(--tj-color, inherit);
+}
+.tj-ham_wasl,
+.tj-laam_shamsiyah,
+.tj-slnt {
+  --tj-color: #9a9a9a;
+}
+.tj-madda_normal {
+  --tj-color: #537fff;
+}
+.tj-madda_permissible {
+  --tj-color: #4050ff;
+}
+.tj-madda_obligatory_mottasel,
+.tj-madda_obligatory_monfasel {
+  --tj-color: #000ebc;
+}
+.tj-madda_necessary {
+  --tj-color: #8b0057;
+}
+.tj-qalaqah {
+  --tj-color: #dd0008;
+}
+.tj-ghunnah {
+  --tj-color: #ff7e1e;
+}
+.tj-ikhafa,
+.tj-ikhafa_shafawi {
+  --tj-color: #9400a8;
+}
+.tj-idgham_ghunnah,
+.tj-idgham_shafawi {
+  --tj-color: #169200;
+}
+.tj-idgham_wo_ghunnah,
+.tj-idgham_mutajanisayn,
+.tj-idgham_mutaqaribayn {
+  --tj-color: #169777;
+}
+.tj-iqlab {
+  --tj-color: #26bffd;
+}
+.dark .tj-madda_obligatory_mottasel,
+.dark .tj-madda_obligatory_monfasel {
+  --tj-color: #6f7bff;
+}
+
+/* ---------- marquages de mots (labo crayon) ---------- */
+
 .mark-highlight-red { background: rgb(220 38 38 / 0.22); }
 .mark-highlight-green { background: rgb(22 163 74 / 0.22); }
 .mark-highlight-blue { background: rgb(37 99 235 / 0.2); }
@@ -75,6 +276,5 @@ body {
 .mark-underline-green { border-color: #16a34a; }
 .mark-underline-blue { border-color: #2563eb; }
 .mark-underline-yellow { border-color: #eab308; }
-/* marquage posé par l'élève (binôme) : distinct de ceux du prof */
 .mark-student { outline: 0.05em dashed rgb(29 26 20 / 0.6); outline-offset: 0.05em; }
-.mark-pending { outline: 0.08em solid var(--color-gold); }
+.mark-pending { outline: 0.08em solid var(--gold); }
