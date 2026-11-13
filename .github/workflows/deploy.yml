@@ -39,6 +39,9 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+          # Projet Supabase (valeurs publiques, variables du dépôt). Absentes = lecteur sans comptes.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
       # Repli SPA : les liens directs (/halaqa/lire/…) chargent l'application.
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v6

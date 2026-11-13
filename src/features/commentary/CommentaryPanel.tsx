@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { SurahMeta, TextSource, VerseCommentary } from '@/core/quran/types'
-import { useSettings } from '@/features/settings/store'
+import { useAuth } from '@/features/auth/store'
+import { useSettings, type PanelTab } from '@/features/settings/store'
+import { MyVerseStatus, TeacherNotesTab } from './TeacherNotes'
 import { useAsync } from '@/lib/useAsync'
 import { loadSources, loadTafsir, loadTranslation } from '@/services/quran-data'
 
@@ -18,14 +20,19 @@ export function CommentaryPanel({ meta, verse }: { meta: SurahMeta; verse: numbe
   const translation = useAsync(() => loadTranslation(s.translation, meta.n), [s.translation, meta.n])
   const tafsir = useAsync(() => loadTafsir(s.tafsir, meta.n), [s.tafsir, meta.n])
   const list = sources.status === 'ready' ? sources.value : { translations: [], tafsirs: [] }
+  // l'onglet « Notes du prof » n'existe qu'avec un compte
+  const signedIn = useAuth((a) => a.profile !== null)
+  const tab = !signedIn && s.panelTab === 'notes' ? 'translation' : s.panelTab
 
   return (
     <div className="flex h-full flex-col gap-3">
       <p className="text-sm font-medium text-green-deep">{t('commentary.verseTitle', { surah: meta.translit, verse })}</p>
-      <Tabs value={s.panelTab} onValueChange={(v) => s.set({ panelTab: v as 'translation' | 'tafsir' })} className="flex-1">
+      <MyVerseStatus surah={meta.n} verse={verse} />
+      <Tabs value={tab} onValueChange={(v) => s.set({ panelTab: v as PanelTab })} className="flex-1">
         <TabsList className="w-full">
           <TabsTrigger value="translation">{t('commentary.translation')}</TabsTrigger>
           <TabsTrigger value="tafsir">{t('commentary.tafsir')}</TabsTrigger>
+          {signedIn && <TabsTrigger value="notes">{t('commentary.notes')}</TabsTrigger>}
         </TabsList>
         <TabsContent value="translation" className="flex flex-col gap-3">
           <SourceSelect value={s.translation} options={list.translations} onChange={(translation) => s.set({ translation })} />
@@ -39,6 +46,11 @@ export function CommentaryPanel({ meta, verse }: { meta: SurahMeta; verse: numbe
           <SourceSelect value={s.tafsir} options={list.tafsirs} onChange={(tafsir) => s.set({ tafsir })} />
           <CommentaryText state={tafsir} verse={verse} source={list.tafsirs.find((x) => x.key === s.tafsir)} />
         </TabsContent>
+        {signedIn && (
+          <TabsContent value="notes" className="flex flex-col gap-3">
+            <TeacherNotesTab surah={meta.n} verse={verse} />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   )

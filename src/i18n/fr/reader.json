@@ -54,7 +54,8 @@
     "tafsir": "Tafsir",
     "group": "Commentaire commun aux versets {{from}} à {{to}}.",
     "missing": "Pas de texte pour ce verset dans cette source.",
-    "source": "Source"
+    "source": "Source",
+    "notes": "Notes du prof"
   },
   "nav": {
     "searchPlaceholder": "Numéro, nom arabe, français ou translittéré…",
@@ -108,5 +109,15 @@
     "surahs": "Les 114 sourates",
     "credits": "Texte : Complexe du Roi Fahd · Audio et minutage : quran.com · Traductions : QuranEnc",
     "labs": "Prototypes (phase 0)"
+  },
+  "notes": {
+    "none": "Pas de note de votre professeur pour ce verset.",
+    "by": "Note de {{name}}",
+    "placeholder": "Votre explication de ce verset (sens, contexte, points de tajwid)…",
+    "editLabel": "Votre note sur ce verset",
+    "save": "Enregistrer la note",
+    "delete": "Supprimer la note",
+    "saved": "Enregistrée.",
+    "visibility": "Visible par tous les élèves de vos classes."
   }
 }

@@ -1,0 +1,195 @@
+{
+  "title": "Mon compte",
+  "disabled": "Les comptes ne sont pas activés sur cette version du site. Le lecteur reste utilisable sans compte.",
+  "forbiddenTitle": "Accès réservé",
+  "welcome": "Bienvenue, {{name}} ! Votre compte est créé.",
+  "teacherSpace": "Espace professeur",
+  "adminSpace": "Administration",
+  "myProgress": "Ma progression",
+  "profile": "Profil",
+  "save": "Enregistrer",
+  "saved": "Enregistré.",
+  "cancel": "Annuler",
+  "signOut": "Se déconnecter",
+  "roles": {
+    "student": "Élève",
+    "teacher": "Professeur",
+    "admin": "Admin"
+  },
+  "fields": {
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "passwordHint": "Au moins {{n}} caractères.",
+    "displayName": "Votre nom",
+    "displayNameHint": "Visible par votre professeur et votre classe (prénom ou prénom + initiale)."
+  },
+  "login": {
+    "title": "Connexion",
+    "short": "Se connecter",
+    "submit": "Se connecter",
+    "forgot": "Mot de passe oublié ?",
+    "forgotTitle": "Mot de passe oublié",
+    "sendReset": "Recevoir un lien par e-mail",
+    "resetSent": "Si un compte existe pour cette adresse, un e-mail vient d'être envoyé. Pensez à regarder dans les indésirables.",
+    "backToLogin": "Revenir à la connexion",
+    "noAccount": "Pas encore de compte ? L'inscription se fait sur invitation de votre professeur :",
+    "haveInvite": "j'ai un code d'invitation"
+  },
+  "join": {
+    "title": "Rejoindre Halaqa",
+    "codeLabel": "Code ou lien d'invitation",
+    "codeHint": "Donné par votre professeur, par exemple ABCDE-FGHJK.",
+    "next": "Continuer",
+    "invalid": "Cette invitation n'est pas valide : le code est erroné, a expiré, ou le professeur a fermé les inscriptions.",
+    "otherCode": "Saisir un autre code",
+    "classInvite": "Invitation dans la classe « {{name}} »",
+    "classTeacher": "Professeur : {{teacher}}",
+    "staffInvite": {
+      "teacher": "Invitation à créer un compte professeur",
+      "admin": "Invitation à créer un compte administrateur",
+      "student": "Invitation"
+    },
+    "staffHint": "Cette invitation ne sert qu'une fois.",
+    "alreadySignedIn": "Vous êtes connecté en tant que {{name}}. Pour utiliser cette invitation, déconnectez-vous d'abord (Mon compte → Se déconnecter).",
+    "joinClass": "Rejoindre la classe",
+    "create": "Créer mon compte",
+    "adult": "Je confirme être majeur(e). Halaqa est réservée aux adultes pour l'instant.",
+    "checkEmail": "Compte créé. Ouvrez le lien reçu par e-mail pour l'activer, puis connectez-vous.",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Connectez-vous pour rejoindre la classe",
+    "codeShown": "Code {{code}}"
+  },
+  "classes": {
+    "title": "Mes classes",
+    "none": "Vous n'êtes dans aucune classe.",
+    "teacher": "Professeur : {{name}}",
+    "leave": "Quitter",
+    "leaveConfirm": "Quitter la classe « {{name}} » ? Votre professeur ne verra plus votre progression. Vous pourrez revenir avec le code d'invitation.",
+    "joinLabel": "Rejoindre une autre classe avec son code",
+    "join": "Rejoindre",
+    "joined": "Vous avez rejoint la classe."
+  },
+  "password": {
+    "title": "Mot de passe",
+    "new": "Nouveau mot de passe",
+    "submit": "Changer le mot de passe",
+    "changed": "Mot de passe changé.",
+    "recovery": "Choisissez un nouveau mot de passe ci-dessous."
+  },
+  "delete": {
+    "button": "Supprimer mon compte",
+    "title": "Supprimer définitivement votre compte ?",
+    "text": "Votre profil, vos classes (si vous êtes professeur), vos notes et votre progression seront effacés. Cette action est irréversible.",
+    "word": "SUPPRIMER",
+    "typeWord": "Tapez {{word}} pour confirmer",
+    "confirm": "Supprimer définitivement"
+  },
+  "teacher": {
+    "title": "Espace professeur",
+    "newClass": "Nouvelle classe",
+    "noClass": "Vous n'avez pas encore de classe. Créez-en une, puis partagez son lien d'invitation avec vos élèves.",
+    "students_one": "{{count}} élève",
+    "students_other": "{{count}} élèves",
+    "className": "Nom de la classe",
+    "create": "Créer la classe",
+    "notFound": "Introuvable, ou vous n'y avez pas accès.",
+    "studentList": "Élèves",
+    "noStudent": "Aucun élève pour l'instant. Partagez le lien d'invitation ci-dessus.",
+    "remove": "Retirer {{name}} de la classe",
+    "removeConfirm": "Retirer {{name}} de la classe ? Son compte n'est pas supprimé et il pourra revenir avec le lien d'invitation.",
+    "settings": "Réglages de la classe",
+    "delete": "Supprimer la classe",
+    "deleteConfirm": "Supprimer la classe « {{name}} » ? Les élèves ne seront plus rattachés (leurs comptes et leur progression sont conservés).",
+    "progressHint": "Touchez une sourate pour voir ses versets, puis sélectionnez un verset ou une plage (premier et dernier verset) et choisissez un statut.",
+    "notesHint": "Vos notes par verset s'écrivent dans le lecteur : touchez un numéro de verset, puis l'onglet « Notes du prof ». Tous vos élèves les voient."
+  },
+  "invite": {
+    "title": "Lien d'invitation",
+    "text": "Envoyez ce lien à vos élèves (WhatsApp, e-mail…). Ils créent leur compte et rejoignent la classe en une étape.",
+    "code": "Code d'invitation",
+    "share": "Partager",
+    "copy": "Copier le lien",
+    "copied": "Copié !",
+    "regenerate": "Nouveau code",
+    "regenerateConfirm": "Créer un nouveau code ? L'ancien lien ne fonctionnera plus (les élèves déjà inscrits restent dans la classe).",
+    "open": "Inscriptions ouvertes",
+    "shareTitle": "Invitation Halaqa",
+    "shareText": "Rejoins ma classe de Coran sur Halaqa :"
+  },
+  "status": {
+    "label": "Où en êtes-vous sur ce verset ?",
+    "new": "Nouveau",
+    "learning": "En cours",
+    "acquired": "Acquis",
+    "review": "À revoir",
+    "validated": "Validé par votre professeur."
+  },
+  "progress": {
+    "intro": "Chaque case est une sourate. Touchez-en une pour voir ses versets et indiquer où vous en êtes. Seul votre professeur peut valider un verset « acquis ».",
+    "amma": "Juz 'Amma",
+    "all": "Tout le Coran",
+    "totals": "{{acquired}} acquis · {{learning}} en cours · {{review}} à revoir",
+    "cellLabel": "{{name}} : {{acquired}} versets acquis sur {{total}}",
+    "sheetHint": "Touchez un verset, puis un second pour sélectionner une plage.",
+    "selectedNone": "Aucune sélection : le statut s'appliquera à toute la sourate.",
+    "selectedOne": "Verset {{n}} sélectionné.",
+    "selectedRange": "Versets {{from}} à {{to}} sélectionnés.",
+    "studentHint": "« Acquis » est validé par votre professeur.",
+    "openReader": "Ouvrir la sourate dans le lecteur"
+  },
+  "admin": {
+    "title": "Administration",
+    "invitations": "Invitations de professeurs",
+    "invitationsHint": "Chaque invitation crée un seul compte et expire après 14 jours. Envoyez le lien à la personne concernée.",
+    "role": "Rôle",
+    "note": "Pour qui ? (facultatif)",
+    "noteHint": "Ex. « Ustadh Karim ». Visible seulement ici.",
+    "create": "Créer une invitation",
+    "used": "utilisée",
+    "expired": "expirée",
+    "usedOn": "utilisée le {{date}}",
+    "expires": "expire le {{date}}",
+    "revoke": "Supprimer l'invitation",
+    "users": "Comptes",
+    "since": "inscrit le {{date}}"
+  },
+  "errors": {
+    "credentials": "Adresse e-mail ou mot de passe incorrect.",
+    "exists": "Un compte existe déjà avec cette adresse. Connectez-vous plutôt.",
+    "weakPassword": "Mot de passe trop court : au moins 8 caractères.",
+    "rateLimit": "Trop de tentatives. Réessayez dans quelques minutes.",
+    "email": "Cette adresse e-mail n'est pas valide.",
+    "invite": "Invitation non valide (code erroné, expiré ou inscriptions fermées).",
+    "studentsOnly": "Seul un compte élève peut rejoindre une classe.",
+    "forbidden": "Vous n'avez pas accès à cette page ou à cette action.",
+    "network": "Connexion impossible. Vérifiez votre réseau.",
+    "generic": "Une erreur est survenue : {{message}}"
+  },
+  "privacy": {
+    "link": "Confidentialité",
+    "title": "Confidentialité",
+    "updated": "Version du 13 novembre 2026.",
+    "sections": [
+      {
+        "title": "Ce que nous enregistrons",
+        "text": "Votre adresse e-mail et votre mot de passe (chiffré) pour vous connecter ; le nom que vous choisissez ; vos classes ; votre progression par verset ; les notes de votre professeur.\nLes réglages du lecteur et la dernière position de lecture restent sur votre appareil."
+      },
+      {
+        "title": "Qui y a accès",
+        "text": "Votre professeur voit votre nom et votre progression. Les élèves de votre classe voient seulement votre nom. Personne d'autre, hors l'administrateur de la plateforme pour la gestion des comptes."
+      },
+      {
+        "title": "Où sont les données",
+        "text": "Chez Supabase, dans un centre de données de l'Union européenne. Aucune publicité, aucun traceur, aucune revente."
+      },
+      {
+        "title": "Enregistrements de voix",
+        "text": "Les devoirs audio (bientôt) seront stockés dans un espace privé, accessible seulement à vous et à votre professeur, et supprimés automatiquement après une durée réglable. Les séances en direct ne sont pas enregistrées."
+      },
+      {
+        "title": "Vos droits",
+        "text": "Vous pouvez modifier votre nom à tout moment et supprimer votre compte depuis « Mon compte » : toutes vos données sont alors effacées. Pour toute question, adressez-vous à votre professeur."
+      }
+    ]
+  }
+}

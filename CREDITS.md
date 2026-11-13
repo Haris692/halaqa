@@ -1,6 +1,6 @@
 # Crédits et licences
 
-État au 13/11/2026 (phase 1). Chaque ressource sera revérifiée avant d'ouvrir la plateforme aux élèves.
+État au 13/11/2026 (phase 2). Chaque ressource sera revérifiée avant d'ouvrir la plateforme aux élèves.
 
 Légende : ✓ licence claire · ⚠ à confirmer
 
@@ -32,5 +32,6 @@ Légende : ✓ licence claire · ⚠ à confirmer
 ## Bibliothèques
 
 - [perfect-freehand](https://github.com/steveruizok/perfect-freehand) — MIT
+- supabase-js — MIT ; Supabase (service hébergé, conditions d'utilisation de Supabase Inc.)
 - React, React Router, Zustand, i18next, Tailwind CSS, Vite, Vitest, shadcn/ui, Radix UI, Lucide — MIT
 - Police d'interface Geist (via Fontsource) — SIL OFL

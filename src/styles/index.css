@@ -278,3 +278,40 @@
 .mark-underline-yellow { border-color: #eab308; }
 .mark-student { outline: 0.05em dashed rgb(29 26 20 / 0.6); outline-offset: 0.05em; }
 .mark-pending { outline: 0.08em solid var(--gold); }
+
+/* ------------------------------------------------------------------ statuts de versets (phase 2) */
+:root {
+  --st-new: #e9e3d3;
+  --st-new-fg: #6b6252;
+  --st-learning: #f3d58a;
+  --st-learning-fg: #5a4410;
+  --st-acquired: #2f6b52;
+  --st-acquired-fg: #ffffff;
+  --st-review: #e8956b;
+  --st-review-fg: #4a1d07;
+}
+.dark {
+  --st-new: #2b2a26;
+  --st-new-fg: #a8a294;
+  --st-learning: #6f5a12;
+  --st-learning-fg: #fdf0b3;
+  --st-acquired: #5fae8b;
+  --st-acquired-fg: #0d1f17;
+  --st-review: #b45a2e;
+  --st-review-fg: #fff1e8;
+}
+.contrast {
+  --st-new: #ffffff;
+  --st-new-fg: #000000;
+  --st-learning: #ffd400;
+  --st-learning-fg: #000000;
+  --st-acquired: #0b3d26;
+  --st-acquired-fg: #ffffff;
+  --st-review: #c2410c;
+  --st-review-fg: #ffffff;
+}
+.st-new { background: var(--st-new); color: var(--st-new-fg); }
+.st-learning { background: var(--st-learning); color: var(--st-learning-fg); }
+.st-acquired { background: var(--st-acquired); color: var(--st-acquired-fg); }
+.st-review { background: var(--st-review); color: var(--st-review-fg); }
+.contrast .st-new { outline: 1px solid #000; }

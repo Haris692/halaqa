@@ -7,6 +7,7 @@ import type { VerseKey } from '@/core/quran/types'
 export type Theme = 'light' | 'dark' | 'contrast'
 export type ReaderMode = 'reading' | 'mushaf'
 export type HighlightLevel = 'verse' | 'word' | 'letter'
+export type PanelTab = 'translation' | 'tafsir' | 'notes'
 export type PauseChoice = 'none' | '2000' | '4000' | '8000' | 'click'
 
 export interface ReaderSettings {
@@ -25,7 +26,7 @@ export interface ReaderSettings {
   translation: string
   tafsir: string
   panelOpen: boolean
-  panelTab: 'translation' | 'tafsir'
+  panelTab: PanelTab
   mask: MaskLevel
 }
 

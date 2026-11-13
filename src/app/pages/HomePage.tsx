@@ -1,4 +1,5 @@
 import { BookOpen, FlaskConical, GraduationCap, Navigation, PlayCircle, Settings } from 'lucide-react'
+import { AccountHomeLinks, AccountButton } from '@/features/auth/AccountLinks'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
@@ -37,10 +38,15 @@ export function HomePage() {
           <h1 className="text-2xl font-semibold text-green-deep">{t('common:appName')}</h1>
           <p className="text-sm text-muted-foreground">{t('common:tagline')}</p>
         </div>
-        <Button variant="ghost" size="icon-touch" onClick={() => setSettings(true)} aria-label={t('toolbar.settings')}>
-          <Settings />
-        </Button>
+        <div className="flex items-center gap-1">
+          <AccountButton />
+          <Button variant="ghost" size="icon-touch" onClick={() => setSettings(true)} aria-label={t('toolbar.settings')}>
+            <Settings />
+          </Button>
+        </div>
       </header>
+
+      <AccountHomeLinks />
 
       <div className="grid gap-3 sm:grid-cols-2">
         {lastPos && (
