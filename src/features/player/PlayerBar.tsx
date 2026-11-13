@@ -34,7 +34,12 @@ export function PlayerBar({
 }) {
   const { t } = useTranslation('reader')
   const { player, snapshot, range, setRange, loop, setLoop } = playback
-  const current = snapshot.activeVerse ? parseVerseKey(snapshot.activeVerse).verse : snapshot.verseIndex + 1
+  // verset affiché : celui en cours, sinon celui par lequel la lecture commencera
+  const current = snapshot.activeVerse
+    ? parseVerseKey(snapshot.activeVerse).verse
+    : snapshot.status === 'idle'
+      ? Math.min(Math.max(startIndex, range[0]), range[1]) + 1
+      : snapshot.verseIndex + 1
 
   const playPause = () => {
     if (!player) return

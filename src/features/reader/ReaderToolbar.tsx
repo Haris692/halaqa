@@ -90,17 +90,18 @@ export function ReaderToolbar({
           </PopoverContent>
         </Popover>
 
-        <Button
-          variant={s.tajweed ? 'secondary' : 'ghost'}
-          size="icon-touch"
-          onClick={() => s.set({ tajweed: !s.tajweed })}
-          disabled={!tajweedAvailable}
-          aria-pressed={s.tajweed}
-          aria-label={t('toolbar.tajweed')}
-          title={tajweedAvailable ? t('toolbar.tajweed') : t('toolbar.tajweedReadingOnly')}
-        >
-          <Palette />
-        </Button>
+        {tajweedAvailable && (
+          <Button
+            variant={s.tajweed ? 'secondary' : 'ghost'}
+            size="icon-touch"
+            onClick={() => s.set({ tajweed: !s.tajweed })}
+            aria-pressed={s.tajweed}
+            aria-label={t('toolbar.tajweed')}
+            title={t('toolbar.tajweed')}
+          >
+            <Palette />
+          </Button>
+        )}
         <Button
           variant={s.panelOpen ? 'secondary' : 'ghost'}
           size="icon-touch"
