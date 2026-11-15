@@ -3,7 +3,7 @@
 Plateforme d'apprentissage du Coran en ligne : séances en direct, salles de travail, outils du professeur, travail entre les séances.
 Spécification : [prompt-claude-code-halaqa.md](prompt-claude-code-halaqa.md) · Architecture : [docs/architecture.md](docs/architecture.md).
 
-**État : phase 2 (comptes et classes), en attente de validation.** Comptes rendus : [phase 0](docs/phase-0.md) · [phase 1](docs/phase-1.md) · [phase 2](docs/phase-2.md).
+**État : phase 3 (séance en direct), en attente de validation.** Comptes rendus : [phase 0](docs/phase-0.md) · [phase 1](docs/phase-1.md) · [phase 2](docs/phase-2.md) · [phase 3](docs/phase-3.md).
 Site de test : https://haris692.github.io/halaqa/
 
 ## Installation
@@ -37,6 +37,9 @@ Pour tester sur iPhone/iPad (Safari) depuis le même réseau Wi-Fi : `npm run de
 | `npm test` | tests Vitest (logique pure de `src/core`, et intégrité des données importées) |
 | `npm run typecheck` | vérification TypeScript stricte |
 | `npm run test:db` | tests pgTAP des politiques RLS (Supabase local) |
+| `npm run test:e2e` | scénario Playwright 1 prof + 2 élèves (Supabase local, fonctions et LiveKit locaux) |
+| `npm run livekit:dev` | serveur LiveKit de développement (Docker) |
+| `npm run functions:serve` | fonctions `livekit-token` et `livekit-moderation` en local |
 | `npm run db:start` / `db:reset` | démarre / réinitialise la base locale (migrations + données de démo) |
 | `npm run db:types` | régénère `src/services/database.types.ts` depuis la base locale |
 | `npm run import` | import complet des données → `public/quran/` (environ 1 min ; réponses brutes en cache dans `scripts/import-quran-data/raw/`) |

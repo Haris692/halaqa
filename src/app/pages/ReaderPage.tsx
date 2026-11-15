@@ -11,6 +11,7 @@ import { useSurahPlayback } from '@/features/player/useSurahPlayback'
 import { MushafPageView } from '@/features/reader/MushafPageView'
 import { ReaderLayout } from '@/features/reader/ReaderLayout'
 import { ReadingView } from '@/features/reader/ReadingView'
+import { reportVerse, useFocusVerse } from '@/features/live/store'
 import { useProgress, useSettings, type ReaderMode } from '@/features/settings/store'
 import { flashReveal, useElementWidth, usePinch, useSwipe } from '@/lib/hooks'
 import { useAsync } from '@/lib/useAsync'
@@ -116,7 +117,10 @@ function SurahReader({
   const panelVerse = snapshot.activeVerse ?? selected ?? verseKey(surah, 1)
   useEffect(() => {
     setLast(panelVerse)
+    reportVerse(panelVerse)
   }, [panelVerse, setLast])
+  // séance en direct : le verset choisi par le prof est surligné chez tous (hors lecture audio)
+  const focusVerse = useFocusVerse() as VerseKey | null
 
   const onWordClick = useCallback(
     (id: WordId, e: React.MouseEvent) => {
@@ -163,7 +167,7 @@ function SurahReader({
           basmala={basmala}
           fontSize={fontSize}
           highlight={s.highlight}
-          activeVerse={snapshot.activeVerse}
+          activeVerse={snapshot.activeVerse ?? focusVerse}
           activeWord={snapshot.activeWord}
           selectedVerse={selected}
           player={player}
@@ -278,7 +282,9 @@ function MushafReader({
     snapshot.activeVerse ?? selected ?? (firstOnPage.surah === playSurah ? pageInfo.first : verseKey(playSurah, 1))
   useEffect(() => {
     setLast(panelVerse)
+    reportVerse(panelVerse)
   }, [panelVerse, setLast])
+  const focusVerse = useFocusVerse() as VerseKey | null
   const startIndex = selected
     ? parseVerseKey(selected).verse - 1
     : firstOnPage.surah === playSurah
@@ -352,7 +358,7 @@ function MushafReader({
               basmala={basmala}
               font="v2"
               width={pageWidth}
-              activeVerse={snapshot.activeVerse}
+              activeVerse={snapshot.activeVerse ?? focusVerse}
               activeWord={activeWordId}
               selectedVerse={selected}
               mask={s.mask}

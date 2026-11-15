@@ -28,14 +28,22 @@ if (-not (& $dockerReady)) {
   if (-not (& $dockerReady)) { Log 'Docker ne répond pas : abandon.'; exit 1 }
 }
 
-# 2. Supabase (base, auth, API REST, passerelle) — rien d'autre, pour ménager le PC
+# 2. Fonctions (jetons LiveKit, talqîn) : copie depuis le dépôt, sans les fichiers .env locaux
+$repoFunctions = Join-Path $PSScriptRoot '..\..\supabase\functions'
+$serverFunctions = Join-Path $ServerDir 'volumes\functions'
+foreach ($name in @('_shared', 'livekit-token', 'livekit-moderation')) {
+  robocopy (Join-Path $repoFunctions $name) (Join-Path $serverFunctions $name) /MIR /XF .env /NFL /NDL /NJH /NJS /NP | Out-Null
+}
+
+# 3. Supabase : base, auth, API REST, temps réel, fonctions, passerelle — rien d'autre, pour ménager le PC
+$services = @('db', 'auth', 'rest', 'realtime', 'functions', 'api-gw')
 Push-Location $ServerDir
 try {
-  docker compose -p halaqa -f docker-compose.yml -f docker-compose.halaqa.yml up -d db auth rest api-gw | Out-Null
+  docker compose -p halaqa -f docker-compose.yml -f docker-compose.halaqa.yml up -d @services | Out-Null
 } finally { Pop-Location }
 Log 'Supabase démarré.'
 
-# 3. Tunnel Cloudflare temporaire (sans compte) vers la passerelle locale
+# 4. Tunnel Cloudflare temporaire (sans compte) vers la passerelle locale
 $cloudflared = 'C:\Program Files (x86)\cloudflared\cloudflared.exe'
 $running = Get-Process cloudflared -ErrorAction SilentlyContinue
 if (-not $running) {
@@ -54,7 +62,7 @@ for ($i = 0; $i -lt 60 -and -not $url; $i++) {
 if (-not $url) { Log 'Adresse du tunnel introuvable (voir tunnel.log).'; exit 1 }
 Log "Tunnel : $url"
 
-# 4. Adresse publique dans la config Supabase (liens envoyés par l'authentification)
+# 5. Adresse publique dans la config Supabase (liens envoyés par l'authentification)
 $envFile = Join-Path $ServerDir '.env'
 $envText = Get-Content $envFile -Raw
 if ($envText -notmatch [regex]::Escape("SUPABASE_PUBLIC_URL=$url")) {
@@ -62,11 +70,11 @@ if ($envText -notmatch [regex]::Escape("SUPABASE_PUBLIC_URL=$url")) {
   $envText = $envText -replace '(?m)^API_EXTERNAL_URL=.*$', "API_EXTERNAL_URL=$url/auth/v1"
   [IO.File]::WriteAllText($envFile, $envText)
   Push-Location $ServerDir
-  try { docker compose -p halaqa -f docker-compose.yml -f docker-compose.halaqa.yml up -d auth api-gw | Out-Null } finally { Pop-Location }
+  try { docker compose -p halaqa -f docker-compose.yml -f docker-compose.halaqa.yml up -d auth functions api-gw | Out-Null } finally { Pop-Location }
   Log 'Config Supabase mise à jour.'
 }
 
-# 5. Site : variable du dépôt + redéploiement si l'adresse a changé
+# 6. Site : variable du dépôt + redéploiement si l'adresse a changé
 $current = (cmd /c "gh variable get VITE_SUPABASE_URL --repo $Repo 2>nul")
 if ($current -ne $url) {
   $anon = ([regex]::Match($envText, '(?m)^ANON_KEY=(.*)$')).Groups[1].Value.Trim()

@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch'
 import { formatInviteCode, inviteLink } from '@/core/progress/invite'
 import { errorMessage } from '@/features/auth/errors'
 import { useAuth } from '@/features/auth/store'
+import { SessionsCard } from '@/features/live/SessionPages'
 import { ProgressBoard } from '@/features/progress/ProgressBoard'
 import { Field, inputClass, Notice, PageShell } from '@/features/ui/PageShell'
 import { useQuery } from '@/lib/query'
@@ -184,6 +185,8 @@ export function ClassPage() {
           </CardContent>
         </Card>
       </div>
+
+      <SessionsCard classId={c.id} />
 
       <ClassSettings
         name={c.name}

@@ -13,6 +13,12 @@ export function errorMessage(t: TFunction, error: unknown): string {
   // Le déclencheur d'inscription refuse les codes invalides : auth renvoie alors une erreur générique.
   if (/invitation_invalide|database error saving new user/i.test(msg)) return t('account:errors.invite')
   if (/reserve_aux_eleves/.test(msg)) return t('account:errors.studentsOnly')
+  if (/seance_fermee/.test(msg)) return t('account:errors.sessionClosed')
+  if (/salle_pleine/.test(msg)) return t('account:errors.roomFull')
+  if (/salles_assignees/.test(msg)) return t('account:errors.roomsAssigned')
+  if (/salle_inconnue|salle_fermee|pas_dans_une_salle/.test(msg)) return t('account:errors.roomGone')
+  if (/LiveKit non configuré/.test(msg)) return t('account:errors.videoNotConfigured')
+  if (/FunctionsFetchError|Failed to send a request to the Edge Function/i.test(msg)) return t('account:errors.video')
   if (/acces_refuse|permission denied|row-level security/i.test(msg)) return t('account:errors.forbidden')
   if (/failed to fetch|network/i.test(msg)) return t('account:errors.network')
   return t('account:errors.generic', { message: msg })

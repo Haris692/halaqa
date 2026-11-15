@@ -315,3 +315,14 @@
 .st-acquired { background: var(--st-acquired); color: var(--st-acquired-fg); }
 .st-review { background: var(--st-review); color: var(--st-review-fg); }
 .contrast .st-new { outline: 1px solid #000; }
+
+/* ------------------------------------------------------------------ séance en direct (phase 3) */
+/* Le panneau de visio ne recouvre jamais le texte : la page lui laisse sa place. */
+html[data-live] main {
+  padding-bottom: 6rem;
+}
+@media (min-width: 1024px) {
+  html[data-live='open'] main {
+    padding-left: 24rem;
+  }
+}

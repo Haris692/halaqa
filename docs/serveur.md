@@ -6,7 +6,7 @@ Mis en place le 15/11/2026, à la place d'un projet Supabase hébergé : la limi
 
 | Élément | Où | Rôle |
 |---|---|---|
-| Supabase officiel auto-hébergé (Docker) | `%USERPROFILE%\halaqa-serveur\src\docker` (hors dépôt : contient les clés secrètes) | 4 services seulement : Postgres, auth, API REST, passerelle (environ 150 Mo de mémoire au total). Studio, Realtime, Storage, fonctions et pooler sont désactivés tant qu'on n'en a pas besoin |
+| Supabase officiel auto-hébergé (Docker) | `%USERPROFILE%\halaqa-serveur\src\docker` (hors dépôt : contient les clés secrètes) | 6 services : Postgres, auth, API REST, temps réel (séances), fonctions (jetons LiveKit, limitées à 512 Mo), passerelle. Studio, Storage et pooler restent désactivés |
 | Tunnel Cloudflare temporaire | `cloudflared`, sans compte | rend l'API accessible en HTTPS sur une adresse `*.trycloudflare.com` ; aucun port n'est ouvert sur la box |
 | Tâche planifiée « Halaqa serveur » | à l'ouverture de session (+1 min) | lance [scripts/serveur/demarrer.ps1](../scripts/serveur/demarrer.ps1) |
 | Tâche planifiée « Halaqa sauvegarde » | chaque nuit à 3 h (ou au réveil du PC) | lance [scripts/serveur/sauvegarder.ps1](../scripts/serveur/sauvegarder.ps1) → `%USERPROFILE%\halaqa-serveur\sauvegardes`, 30 dernières conservées |
@@ -33,6 +33,10 @@ Le site est donc indisponible pour les comptes **environ 2 minutes** après chaq
 **Pour une adresse fixe** (recommandé avant d'ouvrir aux élèves), il faut un compte Cloudflare gratuit et un nom de domaine :
 - on crée un tunnel nommé, par exemple `api.mondomaine.fr` ;
 - l'adresse ne change plus, et le redéploiement à chaque redémarrage n'est plus nécessaire.
+
+## Visio (LiveKit)
+
+Les fonctions lisent `LIVEKIT_URL`, `LIVEKIT_WS_URL`, `LIVEKIT_API_KEY` et `LIVEKIT_API_SECRET` dans le `.env` du serveur. Pour LiveKit Cloud : `LIVEKIT_URL` et `LIVEKIT_WS_URL` = `wss://<projet>.livekit.cloud`. Après modification, relancer `demarrer.ps1` (ou `docker compose … up -d functions`). `demarrer.ps1` recopie aussi à chaque lancement les fonctions du dépôt (`supabase/functions`) vers le serveur.
 
 ## Opérations courantes
 

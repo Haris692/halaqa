@@ -1,5 +1,6 @@
 import { BookOpen, FlaskConical, GraduationCap, Navigation, PlayCircle, Settings } from 'lucide-react'
 import { AccountHomeLinks, AccountButton } from '@/features/auth/AccountLinks'
+import { LiveBanner } from '@/features/live/LiveBanner'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
@@ -46,6 +47,7 @@ export function HomePage() {
         </div>
       </header>
 
+      <LiveBanner />
       <AccountHomeLinks />
 
       <div className="grid gap-3 sm:grid-cols-2">

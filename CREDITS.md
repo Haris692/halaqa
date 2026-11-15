@@ -1,6 +1,6 @@
 # Crédits et licences
 
-État au 13/11/2026 (phase 2). Chaque ressource sera revérifiée avant d'ouvrir la plateforme aux élèves.
+État au 15/11/2026 (phase 3). Chaque ressource sera revérifiée avant d'ouvrir la plateforme aux élèves.
 
 Légende : ✓ licence claire · ⚠ à confirmer
 
@@ -32,6 +32,8 @@ Légende : ✓ licence claire · ⚠ à confirmer
 ## Bibliothèques
 
 - [perfect-freehand](https://github.com/steveruizok/perfect-freehand) — MIT
+- livekit-client, @livekit/components-react, livekit-server-sdk — Apache 2.0 ; LiveKit (serveur, Apache 2.0 ; LiveKit Cloud : conditions de LiveKit Inc.)
+- Playwright — Apache 2.0 (tests)
 - supabase-js — MIT ; Supabase (service hébergé, conditions d'utilisation de Supabase Inc.)
 - React, React Router, Zustand, i18next, Tailwind CSS, Vite, Vitest, shadcn/ui, Radix UI, Lucide — MIT
 - Police d'interface Geist (via Fontsource) — SIL OFL

@@ -1,7 +1,9 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { RequireAuth } from '@/features/auth/RequireAuth'
+import { useAuth } from '@/features/auth/store'
+import { resumeLiveSession, useLive } from '@/features/live/store'
 import { useApplyTheme } from '@/features/settings/useApplyTheme'
 import { ContinueTestPage } from './pages/ContinueTestPage'
 import { HomePage } from './pages/HomePage'
@@ -22,6 +24,10 @@ const TeacherHomePage = lazy(() => import('@/features/classes/TeacherPages').the
 const ClassPage = lazy(() => import('@/features/classes/TeacherPages').then((m) => ({ default: m.ClassPage })))
 const StudentPage = lazy(() => import('@/features/classes/TeacherPages').then((m) => ({ default: m.StudentPage })))
 const MyProgressPage = lazy(() => import('@/features/classes/TeacherPages').then((m) => ({ default: m.MyProgressPage })))
+const SessionEditorPage = lazy(() => import('@/features/live/SessionPages').then((m) => ({ default: m.SessionEditorPage })))
+const LobbyPage = lazy(() => import('@/features/live/SessionPages').then((m) => ({ default: m.LobbyPage })))
+// panneau de visio : chargé seulement quand on entre dans une séance (LiveKit pèse lourd)
+const LiveDock = lazy(() => import('@/features/live/LiveDock').then((m) => ({ default: m.LiveDock })))
 const AdminPage = lazy(() => import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })))
 
 const STAFF = ['teacher', 'admin'] as const
@@ -46,6 +52,8 @@ export function App() {
           <Route path="/prof" element={<RequireAuth roles={STAFF}><TeacherHomePage /></RequireAuth>} />
           <Route path="/prof/classe/:id" element={<RequireAuth roles={STAFF}><ClassPage /></RequireAuth>} />
           <Route path="/prof/eleve/:id" element={<RequireAuth roles={STAFF}><StudentPage /></RequireAuth>} />
+          <Route path="/prof/seance/:id" element={<RequireAuth roles={STAFF}><SessionEditorPage /></RequireAuth>} />
+          <Route path="/seance/:id" element={<RequireAuth><LobbyPage /></RequireAuth>} />
           <Route path="/admin" element={<RequireAuth roles={['admin']}><AdminPage /></RequireAuth>} />
         </Route>
         <Route path="/labs" element={<LabsLayout />}>
@@ -55,7 +63,23 @@ export function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <LiveLayer />
     </BrowserRouter>
+  )
+}
+
+/** Séance en direct : le panneau reste monté par-dessus toutes les pages. */
+function LiveLayer() {
+  const signedIn = useAuth((s) => s.status === 'signedIn')
+  const sessionId = useLive((s) => s.sessionId)
+  useEffect(() => {
+    if (signedIn) resumeLiveSession()
+  }, [signedIn])
+  if (!signedIn || !sessionId) return null
+  return (
+    <Suspense fallback={null}>
+      <LiveDock />
+    </Suspense>
   )
 }
 
