@@ -27,7 +27,7 @@ export function JoinPage() {
 
   if (status === 'disabled') {
     return (
-      <PageShell title={t('join.title')}>
+      <PageShell title={t('join.title')} narrow>
         <Notice>{t('disabled')}</Notice>
       </PageShell>
     )
@@ -36,7 +36,7 @@ export function JoinPage() {
   if (!code) {
     const parsed = parseInviteInput(typed)
     return (
-      <PageShell title={t('join.title')}>
+      <PageShell title={t('join.title')} narrow>
         {param && <Notice tone="error">{t('errors.invite')}</Notice>}
         <Card>
           <CardContent>
@@ -74,7 +74,7 @@ function JoinWithCode({ code }: { code: string }) {
   if (info.status === 'loading' || status === 'loading') return <div className="p-6 text-muted-foreground">{t('common:loading')}</div>
   if (info.status === 'error') {
     return (
-      <PageShell title={t('join.title')}>
+      <PageShell title={t('join.title')} narrow>
         <Notice tone="error">{errorMessage(t, info.error)}</Notice>
       </PageShell>
     )
@@ -82,7 +82,7 @@ function JoinWithCode({ code }: { code: string }) {
   const invite = info.value
   if (!invite) {
     return (
-      <PageShell title={t('join.title')}>
+      <PageShell title={t('join.title')} narrow>
         <Notice tone="error">{t('join.invalid')}</Notice>
         <Button asChild variant="outline" size="touch">
           <Link to="/rejoindre">{t('join.otherCode')}</Link>
@@ -108,7 +108,7 @@ function JoinWithCode({ code }: { code: string }) {
   if (status === 'signedIn' && profile) {
     if (invite.kind === 'staff' || isStaff(profile)) {
       return (
-        <PageShell title={t('join.title')}>
+        <PageShell title={t('join.title')} narrow>
           <Card>{heading}</Card>
           <Notice>{t('join.alreadySignedIn', { name: profile.display_name })}</Notice>
         </PageShell>
@@ -127,7 +127,7 @@ function JoinWithCode({ code }: { code: string }) {
       }
     }
     return (
-      <PageShell title={t('join.title')}>
+      <PageShell title={t('join.title')} narrow>
         <Card>
           {heading}
           <CardContent className="flex flex-col gap-3">
@@ -142,19 +142,21 @@ function JoinWithCode({ code }: { code: string }) {
   }
 
   return (
-    <PageShell title={t('join.title')}>
+    <PageShell title={t('join.title')} narrow>
       <Card>
         {heading}
         <CardContent>
           <SignUpForm code={code} busy={busy} setBusy={setBusy} />
         </CardContent>
       </Card>
-      <p className="text-sm text-muted-foreground">
-        {t('join.haveAccount')}{' '}
-        <Link to={`/connexion?suite=${encodeURIComponent(`/rejoindre/${code}`)}`} className="font-medium text-green-deep underline">
-          {t('join.signIn')}
-        </Link>
-      </p>
+      {invite.kind === 'class' && (
+        <p className="text-sm text-muted-foreground">
+          {t('join.haveAccount')}{' '}
+          <Link to={`/connexion?suite=${encodeURIComponent(`/rejoindre/${code}`)}`} className="font-medium text-green-deep underline">
+            {t('join.signIn')}
+          </Link>
+        </p>
+      )}
       <p className="text-xs text-muted-foreground">
         {t('join.codeShown', { code: formatInviteCode(code) })} ·{' '}
         <Link to="/confidentialite" className="underline">

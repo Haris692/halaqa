@@ -86,17 +86,13 @@ Lien d'invitation de la classe de démo : `/rejoindre/DEMYCXRS23`.
 
 ## Mise en ligne de la base
 
-**Bloquée** : le compte Supabase a atteint la limite de **2 projets gratuits actifs** (eurofret-dev et eurofret-prod). Une organisation vide « Halaqa » a été créée ; la création du projet a été refusée sans frais.
+Le compte Supabase avait déjà ses 2 projets gratuits actifs (Eurofret), et il n'était pas question d'y toucher. La base tourne donc **sur ce PC** : Supabase officiel auto-hébergé, allégé, accessible par un tunnel Cloudflare temporaire, avec démarrage automatique et sauvegarde chaque nuit. Voir [serveur.md](serveur.md).
 
-Une fois le projet créé, la mise en ligne prend quelques commandes :
-1. `supabase link` ;
-2. `supabase db push` : schéma et RLS ;
-3. `supabase config push` : adresses de redirection, mot de passe de 8 caractères minimum, pas de confirmation par e-mail ;
-4. variables du dépôt GitHub `VITE_SUPABASE_URL` et `VITE_SUPABASE_PUBLISHABLE_KEY` ;
-5. une invitation admin à usage unique pour créer ton compte.
+Une organisation Supabase « Halaqa » vide a été créée lors de la première tentative. Elle ne coûte rien et peut servir si l'on repasse un jour sur Supabase hébergé : les mêmes migrations s'y appliqueront telles quelles.
 
 ## Limites connues
 
 - **Mot de passe oublié** : l'e-mail de réinitialisation n'arrivera qu'aux membres de l'équipe Supabase tant qu'aucun service d'envoi n'est branché. En attendant, l'admin peut changer le rôle d'un compte, mais pas son mot de passe.
 - Les statuts se changent à la main, par le prof (validation) ou par l'élève. Les mises à jour automatiques par les corrections arriveront avec la phase 4.
 - Pas de temps réel : une note ou un statut modifié apparaît chez l'autre au prochain chargement de la page.
+- Le PC doit rester allumé. L'adresse du tunnel temporaire change à chaque redémarrage, et le site se rebranche tout seul en environ 2 minutes.

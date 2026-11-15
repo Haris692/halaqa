@@ -25,15 +25,19 @@ export function AccountPage() {
   const recovery = useAuth((s) => s.recovery)
 
   return (
-    <PageShell title={t('title')}>
+    <PageShell title={t('title')} wide>
       {params.get('bienvenue') && <Notice tone="success">{t('welcome', { name: profile.display_name })}</Notice>}
       {recovery && <Notice>{t('password.recovery')}</Notice>}
 
       <AccountHomeLinks />
 
-      <ProfileCard email={email} />
-      {profile.role === 'student' && <MyClasses />}
-      <PasswordCard highlight={recovery} />
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <ProfileCard email={email} />
+          <PasswordCard highlight={recovery} />
+        </div>
+        {profile.role === 'student' && <MyClasses />}
+      </div>
 
       <Card>
         <CardContent className="flex flex-wrap gap-2">

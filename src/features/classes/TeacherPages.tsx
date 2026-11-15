@@ -35,6 +35,7 @@ export function TeacherHomePage() {
 
   return (
     <PageShell
+      wide
       title={t('teacher.title')}
       actions={
         <Button size="touch" onClick={() => setCreating(true)} aria-label={t('teacher.newClass')}>
@@ -44,7 +45,7 @@ export function TeacherHomePage() {
     >
       {classes.status === 'error' && <Notice tone="error">{errorMessage(t, classes.error)}</Notice>}
       {classes.status === 'ready' && mine.length === 0 && <Notice>{t('teacher.noClass')}</Notice>}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {mine.map((c) => (
           <Link key={c.id} to={`/prof/classe/${c.id}`} className="block">
             <Card className="h-full transition-colors hover:border-green-deep">
@@ -138,49 +139,51 @@ export function ClassPage() {
   }
 
   return (
-    <PageShell title={c.name} back="/prof">
+    <PageShell title={c.name} back="/prof" wide>
       {error && <Notice tone="error">{error}</Notice>}
-      <InviteCard
-        code={c.invite_code}
-        open={c.invite_open}
-        onToggle={(invite_open) => run(() => updateClass(c.id, { invite_open }))}
-        onRegenerate={() => {
-          if (confirm(t('invite.regenerateConfirm'))) void run(() => regenerateInviteCode(c.id))
-        }}
-      />
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="size-5 text-green-deep" /> {t('teacher.studentList')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {members.status === 'ready' && members.value.length === 0 && <p className="text-sm text-muted-foreground">{t('teacher.noStudent')}</p>}
-          {members.status === 'ready' && (
-            <ul className="flex flex-col divide-y divide-border">
-              {members.value.map((m) => (
-                <li key={m.student_id} className="flex items-center gap-2 py-1">
-                  <Link to={`/prof/eleve/${m.student_id}`} className="min-w-0 flex-1 truncate rounded-md px-2 py-2 font-medium hover:bg-muted">
-                    {m.student?.display_name ?? '—'}
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="icon-touch"
-                    aria-label={t('teacher.remove', { name: m.student?.display_name ?? '' })}
-                    title={t('teacher.remove', { name: m.student?.display_name ?? '' })}
-                    onClick={() => {
-                      if (confirm(t('teacher.removeConfirm', { name: m.student?.display_name ?? '' }))) void run(() => removeMember(c.id, m.student_id))
-                    }}
-                  >
-                    <UserMinus />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
+      {/* grand écran : invitation à gauche, élèves à droite */}
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <InviteCard
+          code={c.invite_code}
+          open={c.invite_open}
+          onToggle={(invite_open) => run(() => updateClass(c.id, { invite_open }))}
+          onRegenerate={() => {
+            if (confirm(t('invite.regenerateConfirm'))) void run(() => regenerateInviteCode(c.id))
+          }}
+        />
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="size-5 text-green-deep" /> {t('teacher.studentList')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {members.status === 'ready' && members.value.length === 0 && <p className="text-sm text-muted-foreground">{t('teacher.noStudent')}</p>}
+            {members.status === 'ready' && (
+              <ul className="flex flex-col divide-y divide-border">
+                {members.value.map((m) => (
+                  <li key={m.student_id} className="flex items-center gap-2 py-1">
+                    <Link to={`/prof/eleve/${m.student_id}`} className="min-w-0 flex-1 truncate rounded-md px-2 py-2 font-medium hover:bg-muted">
+                      {m.student?.display_name ?? '—'}
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="icon-touch"
+                      aria-label={t('teacher.remove', { name: m.student?.display_name ?? '' })}
+                      title={t('teacher.remove', { name: m.student?.display_name ?? '' })}
+                      onClick={() => {
+                        if (confirm(t('teacher.removeConfirm', { name: m.student?.display_name ?? '' }))) void run(() => removeMember(c.id, m.student_id))
+                      }}
+                    >
+                      <UserMinus />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       <ClassSettings
         name={c.name}

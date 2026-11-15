@@ -50,6 +50,7 @@ L'import échoue si un contrôle d'intégrité ne passe pas : 114 sourates, 6 23
 - `src/features/` — interface par domaine : lecteur, lecture audio, traduction/tafsir/notes du prof, navigation, réglages, comptes, classes, progression, administration.
 - `src/services/` — chargement des données, lecteur audio, client Supabase et accès aux données des comptes.
 - `supabase/` — migrations (schéma + RLS), tests pgTAP, données de démonstration locales.
+- `scripts/serveur/` — démarrage du serveur auto-hébergé et du tunnel, sauvegarde nocturne.
 - `src/app/pages/` — pages ; `src/labs/` — prototypes de la phase 0 (chargés à la demande).
 - `src/i18n/fr/` — tous les textes d'interface.
 
@@ -76,6 +77,6 @@ Voir `.env.example`. En déploiement, les deux variables Supabase sont des **var
 4. copie de `index.html` en `404.html` (repli pour les liens directs) ;
 5. publication.
 
-Base de données : les migrations s'appliquent au projet hébergé avec `supabase db push` (après `supabase link`), et la configuration d'auth avec `supabase config push`.
+Base de données : **Supabase auto-hébergé sur le PC de développement**, exposé par un tunnel Cloudflare. Voir [docs/serveur.md](docs/serveur.md) pour le démarrage, les sauvegardes et l'application des migrations.
 
 Pour la suite : Cloudflare Pages recommandé (voir `docs/architecture.md`).

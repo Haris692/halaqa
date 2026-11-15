@@ -23,8 +23,10 @@ export function AdminPage() {
   const { t } = useTranslation('account')
   return (
     <PageShell title={t('admin.title')} wide>
-      <Invitations />
-      <Users />
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <Invitations />
+        <Users />
+      </div>
     </PageShell>
   )
 }

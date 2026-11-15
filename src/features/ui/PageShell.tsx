@@ -12,16 +12,20 @@ export function PageShell({
   actions,
   children,
   wide = false,
+  narrow = false,
 }: {
   title: ReactNode
   back?: string
   actions?: ReactNode
   children: ReactNode
+  /** pages à grilles (progression, prof, admin) : profitent d'un grand écran */
   wide?: boolean
+  /** formulaires courts (connexion, invitation) */
+  narrow?: boolean
 }) {
   const { t } = useTranslation()
   return (
-    <div className={cn('mx-auto flex min-h-dvh flex-col gap-4 p-4', wide ? 'max-w-5xl' : 'max-w-3xl')}>
+    <div className={cn('mx-auto flex min-h-dvh w-full flex-col gap-4 p-4 lg:py-8', wide ? 'max-w-6xl' : narrow ? 'max-w-lg' : 'max-w-3xl')}>
       <header className="flex items-center gap-2">
         <Button asChild variant="ghost" size="icon-touch" aria-label={t('back')}>
           <Link to={back}>

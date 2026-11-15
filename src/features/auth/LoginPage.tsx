@@ -25,7 +25,7 @@ export function LoginPage() {
   if (status === 'signedIn') return <Navigate to={next} replace />
   if (status === 'disabled') {
     return (
-      <PageShell title={t('login.title')}>
+      <PageShell title={t('login.title')} narrow>
         <Notice>{t('disabled')}</Notice>
       </PageShell>
     )
@@ -50,7 +50,7 @@ export function LoginPage() {
   }
 
   return (
-    <PageShell title={forgot ? t('login.forgotTitle') : t('login.title')}>
+    <PageShell title={forgot ? t('login.forgotTitle') : t('login.title')} narrow>
       <Card>
         <CardContent>
           <form onSubmit={submit} className="flex flex-col gap-4">
