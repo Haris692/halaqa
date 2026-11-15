@@ -82,7 +82,10 @@ npm run test:e2e          # scénario 1 prof + 2 élèves
 ## En ligne
 
 - Le serveur de ce PC fait maintenant aussi tourner **Realtime** et les **fonctions** : 6 services, voir [serveur.md](serveur.md).
-- **Il manque LiveKit** pour la vidéo. Un serveur LiveKit ne peut pas passer par le tunnel temporaire : la vidéo a besoin de ports UDP ouverts, ou d'un nom de domaine avec certificat. **LiveKit Cloud** règle ça : offre gratuite, région Europe. Tant qu'il n'est pas configuré, tout le reste de la séance fonctionne (plan, salles, mains levées, annonces), mais le panneau affiche « Le service de visio ne répond pas ».
+- **La visio tourne aussi sur ce PC** : LiveKit natif Windows, signalisation par un second tunnel, vidéo en UDP par traversée de NAT. Il n'y a ni compte ni port ouvert sur la box ; détails et limites dans [serveur.md](serveur.md#visio-livekit-sur-ce-pc).
+- Vérifié le 15/11/2026 :
+  - depuis une machine GitHub (réseau extérieur), vidéo et son reçus en environ 2 s, en UDP ;
+  - le scénario 1 prof + 2 élèves passe sur ce LiveKit de production, avec une bascule de salle en 1,1 s.
 
 ## Limites connues
 

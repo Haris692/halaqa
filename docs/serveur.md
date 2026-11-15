@@ -34,9 +34,40 @@ Le site est donc indisponible pour les comptes **environ 2 minutes** après chaq
 - on crée un tunnel nommé, par exemple `api.mondomaine.fr` ;
 - l'adresse ne change plus, et le redéploiement à chaque redémarrage n'est plus nécessaire.
 
-## Visio (LiveKit)
+## Visio (LiveKit sur ce PC)
 
-Les fonctions lisent `LIVEKIT_URL`, `LIVEKIT_WS_URL`, `LIVEKIT_API_KEY` et `LIVEKIT_API_SECRET` dans le `.env` du serveur. Pour LiveKit Cloud : `LIVEKIT_URL` et `LIVEKIT_WS_URL` = `wss://<projet>.livekit.cloud`. Après modification, relancer `demarrer.ps1` (ou `docker compose … up -d functions`). `demarrer.ps1` recopie aussi à chaque lancement les fonctions du dépôt (`supabase/functions`) vers le serveur.
+Mis en place le 15/11/2026, sans compte ni redirection de port sur la box.
+
+| Élément | Où | Rôle |
+|---|---|---|
+| `livekit-server.exe` 1.13.11 (Windows natif, ~40 Mo de mémoire) | `%USERPROFILE%\halaqa-serveur\livekit` (hors dépôt : `livekit.yaml` contient le secret) | serveur vidéo. Signalisation sur `127.0.0.1:7890`, vidéo en UDP sur le port 7882 |
+| Second tunnel Cloudflare temporaire | vers `127.0.0.1:7890` | adresse `wss://…trycloudflare.com` donnée aux navigateurs, écrite dans `livekit\url.txt` |
+
+**Comment la vidéo passe sans ouvrir de port.**
+- LiveKit découvre l'IPv4 publique de la box par STUN.
+- Il s'annonce aussi par ses adresses IPv6.
+- La connexion s'ouvre par **traversée de NAT** (comme un appel vidéo entre deux PC), en UDP direct.
+- La Freebox le permet ; la vérification que LiveKit fait sur sa propre adresse est désactivée (`skip_external_ip_validation`), car le pare-feu bloque cette auto-vérification.
+
+**`demarrer.ps1` gère tout.**
+- Il lance LiveKit et son tunnel.
+- Il écrit dans le `.env` du serveur :
+  - `LIVEKIT_URL=http://host.docker.internal:7890`, l'API vue des fonctions ;
+  - `LIVEKIT_WS_URL`, l'adresse du tunnel ;
+  - la clé et le secret, lus dans `livekit.yaml`.
+- Il recrée ensuite le conteneur des fonctions.
+- Le site n'a pas besoin d'être redéployé quand l'adresse du tunnel LiveKit change : elle est donnée avec chaque jeton.
+- `demarrer.ps1` recopie aussi, à chaque lancement, les fonctions du dépôt (`supabase/functions`) vers le serveur.
+
+**Tester depuis un réseau extérieur** (une machine GitHub rejoint une salle jetable avec caméra et micro simulés, et vérifie la réception) :
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\serveur\test-visio.ps1
+```
+
+**Limites.**
+- Pas de serveur relais (TURN), ni de repli TCP. Un élève derrière un réseau très fermé peut ne pas recevoir la vidéo, alors que le reste de la séance fonctionne : réseau d'entreprise ou d'école qui bloque l'UDP, ou certains réseaux 4G à NAT « symétrique ».
+- Solution durable : LiveKit Cloud (offre gratuite). Il suffit de mettre ses quatre valeurs dans le `.env` et de retirer `livekit.yaml` pour que `demarrer.ps1` ne les écrase plus.
+- Si Windows affiche « Le pare-feu a bloqué certaines fonctionnalités de livekit-server », on peut accepter ou annuler : la vidéo marche dans les deux cas.
 
 ## Opérations courantes
 

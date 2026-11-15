@@ -43,38 +43,63 @@ try {
 } finally { Pop-Location }
 Log 'Supabase démarré.'
 
-# 4. Tunnel Cloudflare temporaire (sans compte) vers la passerelle locale
+# 4. LiveKit (visio) : serveur natif Windows, la vidéo passe en UDP directement par la box
+#    (port 7882, ouvert par la traversée de NAT comme un appel vidéo ordinaire, sans redirection de port)
+$livekitDir = "$env:USERPROFILE\halaqa-serveur\livekit"
+if ((Test-Path "$livekitDir\livekit-server.exe") -and -not (Get-Process livekit-server -ErrorAction SilentlyContinue)) {
+  Start-Process -FilePath "$livekitDir\livekit-server.exe" -ArgumentList "--config `"$livekitDir\livekit.yaml`"" -WorkingDirectory $livekitDir -WindowStyle Hidden `
+    -RedirectStandardOutput (Join-Path $logDir 'livekit.log') -RedirectStandardError (Join-Path $logDir 'livekit.err.log')
+  Log 'LiveKit lancé.'
+}
+
+# 5. Tunnels Cloudflare temporaires (sans compte) : API Supabase (8000) et signalisation LiveKit (7890)
 $cloudflared = 'C:\Program Files (x86)\cloudflared\cloudflared.exe'
-$running = Get-Process cloudflared -ErrorAction SilentlyContinue
-if (-not $running) {
-  Remove-Item $tunnelLog -ErrorAction SilentlyContinue
-  Start-Process -FilePath $cloudflared -ArgumentList @('tunnel', '--no-autoupdate', '--url', 'http://127.0.0.1:8000', '--logfile', $tunnelLog) -WindowStyle Hidden
-  Log 'Tunnel lancé.'
-}
-$url = $null
-for ($i = 0; $i -lt 60 -and -not $url; $i++) {
-  Start-Sleep -Seconds 1
-  if (Test-Path $tunnelLog) {
-    $m = Select-String -Path $tunnelLog -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -Last 1
-    if ($m) { $url = $m.Matches[0].Value }
+function Start-Tunnel([int]$port, [string]$logFile) {
+  $running = Get-CimInstance Win32_Process -Filter "name='cloudflared.exe'" | Where-Object { $_.CommandLine -match "127\.0\.0\.1:$port\b" }
+  if (-not $running) {
+    Remove-Item $logFile -ErrorAction SilentlyContinue
+    Start-Process -FilePath $cloudflared -ArgumentList @('tunnel', '--no-autoupdate', '--url', "http://127.0.0.1:$port", '--logfile', $logFile) -WindowStyle Hidden
+    Log "Tunnel $port lancé." | Out-Null
   }
+  for ($i = 0; $i -lt 60; $i++) {
+    if (Test-Path $logFile) {
+      $m = Select-String -Path $logFile -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -Last 1
+      if ($m) { return $m.Matches[0].Value }
+    }
+    Start-Sleep -Seconds 1
+  }
+  return $null
 }
+$url = Start-Tunnel 8000 $tunnelLog
 if (-not $url) { Log 'Adresse du tunnel introuvable (voir tunnel.log).'; exit 1 }
 Log "Tunnel : $url"
-
-# 5. Adresse publique dans la config Supabase (liens envoyés par l'authentification)
+$livekitUrl = $null
+if (Test-Path "$livekitDir\livekit.yaml") {
+  $lkTunnel = Start-Tunnel 7890 (Join-Path $logDir 'tunnel-livekit.log')
+  if ($lkTunnel) { $livekitUrl = $lkTunnel -replace '^https://', 'wss://'; [IO.File]::WriteAllText("$livekitDir\url.txt", $livekitUrl); Log "Visio : $livekitUrl" }
+  else { Log 'Adresse du tunnel LiveKit introuvable (voir tunnel-livekit.log).' }
+}
+# 6. Adresse publique dans la config Supabase (liens envoyés par l'authentification)
 $envFile = Join-Path $ServerDir '.env'
 $envText = Get-Content $envFile -Raw
-if ($envText -notmatch [regex]::Escape("SUPABASE_PUBLIC_URL=$url")) {
-  $envText = $envText -replace '(?m)^SUPABASE_PUBLIC_URL=.*$', "SUPABASE_PUBLIC_URL=$url"
-  $envText = $envText -replace '(?m)^API_EXTERNAL_URL=.*$', "API_EXTERNAL_URL=$url/auth/v1"
+$before = $envText
+$envText = $envText -replace '(?m)^SUPABASE_PUBLIC_URL=.*$', "SUPABASE_PUBLIC_URL=$url"
+$envText = $envText -replace '(?m)^API_EXTERNAL_URL=.*$', "API_EXTERNAL_URL=$url/auth/v1"
+# visio : clés lues dans livekit.yaml, API LiveKit en local, adresse publique = tunnel LiveKit
+if ($livekitUrl -and ((Get-Content "$livekitDir\livekit.yaml" -Raw) -match '(?m)^keys:\s*\r?\n\s+(\S+):\s*(\S+)')) {
+  $envText = $envText -replace '(?m)^LIVEKIT_URL=.*$', 'LIVEKIT_URL=http://host.docker.internal:7890'
+  $envText = $envText -replace '(?m)^LIVEKIT_WS_URL=.*$', "LIVEKIT_WS_URL=$livekitUrl"
+  $envText = $envText -replace '(?m)^LIVEKIT_API_KEY=.*$', "LIVEKIT_API_KEY=$($Matches[1])"
+  $envText = $envText -replace '(?m)^LIVEKIT_API_SECRET=.*$', "LIVEKIT_API_SECRET=$($Matches[2])"
+}
+if ($envText -ne $before) {
   [IO.File]::WriteAllText($envFile, $envText)
   Push-Location $ServerDir
   try { docker compose -p halaqa -f docker-compose.yml -f docker-compose.halaqa.yml up -d auth functions api-gw | Out-Null } finally { Pop-Location }
   Log 'Config Supabase mise à jour.'
 }
 
-# 6. Site : variable du dépôt + redéploiement si l'adresse a changé
+# 7. Site : variable du dépôt + redéploiement si l'adresse a changé
 $current = (cmd /c "gh variable get VITE_SUPABASE_URL --repo $Repo 2>nul")
 if ($current -ne $url) {
   $anon = ([regex]::Match($envText, '(?m)^ANON_KEY=(.*)$')).Groups[1].Value.Trim()
