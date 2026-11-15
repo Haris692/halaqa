@@ -16,6 +16,9 @@ interface LiveStore {
   prefs: { mic: boolean; camera: boolean; audioOnly: boolean }
   dockOpen: boolean
   dashboardOpen: boolean
+  /** séance qui vient de se terminer : on propose le récapitulatif */
+  ended: { id: string; title: string } | null
+  dismissEnded: () => void
   join: (sessionId: string) => Promise<void>
   leave: () => void
   refresh: () => Promise<void>
@@ -35,6 +38,8 @@ export const useLive = create<LiveStore>()((set, get) => ({
   prefs: { mic: true, camera: false, audioOnly: false },
   dockOpen: false,
   dashboardOpen: false,
+  ended: null,
+  dismissEnded: () => set({ ended: null }),
 
   join: async (sessionId) => {
     if (get().sessionId === sessionId && get().state) return
@@ -74,7 +79,10 @@ export const useLive = create<LiveStore>()((set, get) => ({
       const state = await fetchState(id)
       if (get().sessionId !== id) return
       set({ state, error: null })
-      if (state.session.status === 'ended') get().leave()
+      if (state.session.status === 'ended') {
+        set({ ended: { id, title: state.session.title || state.session.class_name } })
+        get().leave()
+      }
     } catch (e) {
       set({ error: e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e) })
     }

@@ -67,6 +67,8 @@
   --hl-word: #f9d649;
   --hl-letter: #f59e0b;
   --mushaf-page: #fffaf0;
+  --corr-error: #b91c1c;
+  --corr-pending: #c2410c;
   --letter-blend: multiply;
 
   --background: var(--paper);
@@ -278,6 +280,24 @@
 .mark-underline-yellow { border-color: #eab308; }
 .mark-student { outline: 0.05em dashed rgb(29 26 20 / 0.6); outline-offset: 0.05em; }
 .mark-pending { outline: 0.08em solid var(--gold); }
+
+/* ---------- corrections de récitation (phase 4) ---------- */
+
+/* le mot fautif passe en rouge chez l'élève (y compris en glyphes du Mushaf) */
+.corr-error {
+  color: var(--corr-error) !important;
+  text-decoration: underline wavy var(--corr-error);
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.3em;
+}
+.corr-error .tj { color: inherit !important; }
+/* marquage du binôme pas encore confirmé par le prof : distinct, pointillé */
+.corr-pending {
+  text-decoration: underline dotted var(--corr-pending);
+  text-decoration-thickness: 0.08em;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.3em;
+}
 
 /* ------------------------------------------------------------------ statuts de versets (phase 2) */
 :root {

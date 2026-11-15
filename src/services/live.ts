@@ -18,6 +18,12 @@ export interface LiveRoom {
   position: number
   capacity: number
   teacher_visited_at: string | null
+  /** le prof autorise le crayon aux élèves de la salle */
+  student_pen: boolean
+  /** prof qui a « pris la main » : les élèves suivent sa vue */
+  leader_id: string | null
+  /** test « continue le verset » en cours (voir parseQuiz) */
+  quiz: unknown
 }
 
 export interface LiveParticipant {

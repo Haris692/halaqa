@@ -5,7 +5,39 @@ export type Database = {
   
   "public": {
           Tables: {
-            "class_members": {
+            "annotations": {
+                  Row: {
+                    "anchor": Json | null,"author_id": string,"author_role": Database["public"]['Enums']["author_role"],"created_at": string,"id": string,"kind": Database["public"]['Enums']["annotation_kind"],"points": (number)[] | null,"room_id": string,"session_id": string,"student_ids": (string)[],"style": NonNullable<Json>,"words": (string)[] | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "anchor"?: Json | null,"author_id": string,"author_role": Database["public"]['Enums']["author_role"],"created_at"?: string,"id": string,"kind": Database["public"]['Enums']["annotation_kind"],"points"?: (number)[] | null,"room_id": string,"session_id": string,"student_ids"?: (string)[],"style": NonNullable<Json>,"words"?: (string)[] | null
+                  }
+                  Update: {
+                    "anchor"?: Json | null,"author_id"?: string,"author_role"?: Database["public"]['Enums']["author_role"],"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["annotation_kind"],"points"?: (number)[] | null,"room_id"?: string,"session_id"?: string,"student_ids"?: (string)[],"style"?: NonNullable<Json>,"words"?: (string)[] | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "annotations_author_id_fkey"
+      columns: ["author_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "annotations_room_id_fkey"
+      columns: ["room_id"]
+isOneToOne: false
+      referencedRelation: "live_rooms"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "annotations_session_id_fkey"
+      columns: ["session_id"]
+isOneToOne: false
+      referencedRelation: "live_sessions"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"class_members": {
                   Row: {
                     "class_id": string,"joined_at": string,"student_id": string
                   }
@@ -46,6 +78,44 @@ isOneToOne: false
                     {
       foreignKeyName: "classes_teacher_id_fkey"
       columns: ["teacher_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"corrections": {
+                  Row: {
+                    "author_id": string | null,"author_role": Database["public"]['Enums']["author_role"],"comment": string | null,"created_at": string,"error_type": Database["public"]['Enums']["error_type"],"id": string,"room_id": string | null,"session_id": string,"status": Database["public"]['Enums']["correction_status"],"student_id": string,"tajweed_rule": string | null,"verse": string | null,"word": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"author_role": Database["public"]['Enums']["author_role"],"comment"?: string | null,"created_at"?: string,"error_type": Database["public"]['Enums']["error_type"],"id": string,"room_id"?: string | null,"session_id": string,"status": Database["public"]['Enums']["correction_status"],"student_id": string,"tajweed_rule"?: string | null,"verse"?: never,"word": string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"author_role"?: Database["public"]['Enums']["author_role"],"comment"?: string | null,"created_at"?: string,"error_type"?: Database["public"]['Enums']["error_type"],"id"?: string,"room_id"?: string | null,"session_id"?: string,"status"?: Database["public"]['Enums']["correction_status"],"student_id"?: string,"tajweed_rule"?: string | null,"verse"?: never,"word"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "corrections_author_id_fkey"
+      columns: ["author_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "corrections_room_id_fkey"
+      columns: ["room_id"]
+isOneToOne: false
+      referencedRelation: "live_rooms"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "corrections_session_id_fkey"
+      columns: ["session_id"]
+isOneToOne: false
+      referencedRelation: "live_sessions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "corrections_student_id_fkey"
+      columns: ["student_id"]
 isOneToOne: false
       referencedRelation: "profiles"
       referencedColumns: ["id"]
@@ -111,17 +181,23 @@ isOneToOne: false
                   ]
                 },"live_rooms": {
                   Row: {
-                    "capacity": number,"closed": boolean,"created_at": string,"id": string,"kind": Database["public"]['Enums']["room_kind"],"name": string,"position": number,"session_id": string,"teacher_visited_at": string | null
+                    "capacity": number,"closed": boolean,"created_at": string,"id": string,"kind": Database["public"]['Enums']["room_kind"],"leader_id": string | null,"name": string,"position": number,"quiz": Json | null,"session_id": string,"student_pen": boolean,"teacher_visited_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "capacity"?: number,"closed"?: boolean,"created_at"?: string,"id"?: string,"kind": Database["public"]['Enums']["room_kind"],"name": string,"position"?: number,"session_id": string,"teacher_visited_at"?: string | null
+                    "capacity"?: number,"closed"?: boolean,"created_at"?: string,"id"?: string,"kind": Database["public"]['Enums']["room_kind"],"leader_id"?: string | null,"name": string,"position"?: number,"quiz"?: Json | null,"session_id": string,"student_pen"?: boolean,"teacher_visited_at"?: string | null
                   }
                   Update: {
-                    "capacity"?: number,"closed"?: boolean,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["room_kind"],"name"?: string,"position"?: number,"session_id"?: string,"teacher_visited_at"?: string | null
+                    "capacity"?: number,"closed"?: boolean,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["room_kind"],"leader_id"?: string | null,"name"?: string,"position"?: number,"quiz"?: Json | null,"session_id"?: string,"student_pen"?: boolean,"teacher_visited_at"?: string | null
                   }
                   Relationships: [
                     {
+      foreignKeyName: "live_rooms_leader_id_fkey"
+      columns: ["leader_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "live_rooms_session_id_fkey"
       columns: ["session_id"]
 isOneToOne: false
@@ -131,14 +207,14 @@ isOneToOne: false
                   ]
                 },"live_sessions": {
                   Row: {
-                    "class_id": string,"created_at": string,"created_by": string | null,"current_step": number,"ended_at": string | null,"floor_user": string | null,"focus_verse": string | null,"id": string,"notes": string | null,"passage": Json | null,"plan": NonNullable<Json>,"room_mode": string,"started_at": string | null,"status": Database["public"]['Enums']["session_status"],"step_started_at": string | null,"tajweed_focus": string | null,"title": string
+                    "class_id": string,"created_at": string,"created_by": string | null,"current_step": number,"ended_at": string | null,"floor_user": string | null,"focus_verse": string | null,"id": string,"notes": string | null,"passage": Json | null,"plan": NonNullable<Json>,"room_mode": string,"show_summary": boolean,"started_at": string | null,"status": Database["public"]['Enums']["session_status"],"step_started_at": string | null,"tajweed_focus": string | null,"title": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "class_id": string,"created_at"?: string,"created_by"?: string | null,"current_step"?: number,"ended_at"?: string | null,"floor_user"?: string | null,"focus_verse"?: string | null,"id"?: string,"notes"?: string | null,"passage"?: Json | null,"plan"?: NonNullable<Json>,"room_mode"?: string,"started_at"?: string | null,"status"?: Database["public"]['Enums']["session_status"],"step_started_at"?: string | null,"tajweed_focus"?: string | null,"title"?: string
+                    "class_id": string,"created_at"?: string,"created_by"?: string | null,"current_step"?: number,"ended_at"?: string | null,"floor_user"?: string | null,"focus_verse"?: string | null,"id"?: string,"notes"?: string | null,"passage"?: Json | null,"plan"?: NonNullable<Json>,"room_mode"?: string,"show_summary"?: boolean,"started_at"?: string | null,"status"?: Database["public"]['Enums']["session_status"],"step_started_at"?: string | null,"tajweed_focus"?: string | null,"title"?: string
                   }
                   Update: {
-                    "class_id"?: string,"created_at"?: string,"created_by"?: string | null,"current_step"?: number,"ended_at"?: string | null,"floor_user"?: string | null,"focus_verse"?: string | null,"id"?: string,"notes"?: string | null,"passage"?: Json | null,"plan"?: NonNullable<Json>,"room_mode"?: string,"started_at"?: string | null,"status"?: Database["public"]['Enums']["session_status"],"step_started_at"?: string | null,"tajweed_focus"?: string | null,"title"?: string
+                    "class_id"?: string,"created_at"?: string,"created_by"?: string | null,"current_step"?: number,"ended_at"?: string | null,"floor_user"?: string | null,"focus_verse"?: string | null,"id"?: string,"notes"?: string | null,"passage"?: Json | null,"plan"?: NonNullable<Json>,"room_mode"?: string,"show_summary"?: boolean,"started_at"?: string | null,"status"?: Database["public"]['Enums']["session_status"],"step_started_at"?: string | null,"tajweed_focus"?: string | null,"title"?: string
                   }
                   Relationships: [
                     {
@@ -247,6 +323,38 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"verse_results": {
+                  Row: {
+                    "author_id": string | null,"created_at": string,"id": string,"result": Database["public"]['Enums']["verse_result"],"session_id": string,"student_id": string,"verse": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"created_at"?: string,"id"?: string,"result": Database["public"]['Enums']["verse_result"],"session_id": string,"student_id": string,"verse": string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"created_at"?: string,"id"?: string,"result"?: Database["public"]['Enums']["verse_result"],"session_id"?: string,"student_id"?: string,"verse"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "verse_results_author_id_fkey"
+      columns: ["author_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "verse_results_session_id_fkey"
+      columns: ["session_id"]
+isOneToOne: false
+      referencedRelation: "live_sessions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "verse_results_student_id_fkey"
+      columns: ["student_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -264,6 +372,12 @@ isOneToOne: false
 "attends_session":
 { Args: { "target": string }; Returns: boolean
                            },
+"can_annotate":
+{ Args: { "target": string }; Returns: boolean
+                           },
+"can_correct":
+{ Args: { "student": string,"target": string }; Returns: boolean
+                           },
 "check_invite":
 { Args: { "code": string }; Returns: {
               "class_name": string,"kind": string,"role": Database["public"]['Enums']["app_role"],"teacher_name": string
@@ -271,6 +385,9 @@ isOneToOne: false
                            },
 "choose_room":
 { Args: { "room_id": string,"session_id": string }; Returns: undefined
+                           },
+"clear_board":
+{ Args: { "room_id": string }; Returns: undefined
                            },
 "close_room":
 { Args: { "room_id": string,"session_id": string }; Returns: undefined
@@ -281,11 +398,17 @@ isOneToOne: false
 "delete_my_account":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"end_quiz":
+{ Args: { "room_id": string }; Returns: undefined
+                           },
 "end_session":
 { Args: { "session_id": string }; Returns: undefined
                            },
 "gen_invite_code":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"in_room":
+{ Args: { "target": string,"who": string }; Returns: boolean
                            },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -308,6 +431,12 @@ isOneToOne: false
 "move_participant":
 { Args: { "room_id": string,"session_id": string,"user_id": string }; Returns: undefined
                            },
+"my_sessions":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"open_room_session":
+{ Args: { "target": string }; Returns: string
+                           },
 "open_rooms":
 { Args: { "capacity"?: number,"groups": Json,"mode": string,"room_count": number,"session_id": string }; Returns: undefined
                            },
@@ -320,17 +449,38 @@ isOneToOne: false
 "require_teacher":
 { Args: { "target": string }; Returns: undefined
                            },
+"reveal_quiz":
+{ Args: { "room_id": string }; Returns: undefined
+                           },
+"room_board":
+{ Args: { "room_id": string }; Returns: Json
+                           },
+"session_error_summary":
+{ Args: { "session_id": string }; Returns: Json
+                           },
+"session_recap":
+{ Args: { "session_id": string }; Returns: Json
+                           },
 "session_state":
 { Args: { "session_id": string }; Returns: Json
                            },
 "set_floor":
 { Args: { "session_id": string,"user_id": string }; Returns: undefined
                            },
+"set_room_leader":
+{ Args: { "room_id": string,"take": boolean }; Returns: undefined
+                           },
+"set_room_pen":
+{ Args: { "allowed": boolean,"room_id": string }; Returns: undefined
+                           },
 "set_step":
 { Args: { "session_id": string,"step": number }; Returns: undefined
                            },
 "shares_class_with":
 { Args: { "other": string }; Returns: boolean
+                           },
+"start_quiz":
+{ Args: { "room_id": string,"student_id": string }; Returns: string
                            },
 "start_session":
 { Args: { "session_id": string }; Returns: undefined
@@ -349,7 +499,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "app_role": "student"|"teacher"|"admin","participant_activity": "idle"|"listening"|"reciting","room_kind": "main"|"breakout","session_status": "planned"|"live"|"ended","verse_status": "new"|"learning"|"acquired"|"review"
+            "annotation_kind": "stroke"|"mark","app_role": "student"|"teacher"|"admin","author_role": "teacher"|"peer","correction_status": "confirmed"|"pending","error_type": "pronunciation"|"tajweed"|"haraka"|"forgotten"|"added"|"memory","participant_activity": "idle"|"listening"|"reciting","room_kind": "main"|"breakout","session_status": "planned"|"live"|"ended","verse_result": "validated"|"review","verse_status": "new"|"learning"|"acquired"|"review"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -465,7 +615,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "app_role": ["student", "teacher", "admin"],"participant_activity": ["idle", "listening", "reciting"],"room_kind": ["main", "breakout"],"session_status": ["planned", "live", "ended"],"verse_status": ["new", "learning", "acquired", "review"]
+            "annotation_kind": ["stroke", "mark"],"app_role": ["student", "teacher", "admin"],"author_role": ["teacher", "peer"],"correction_status": ["confirmed", "pending"],"error_type": ["pronunciation", "tajweed", "haraka", "forgotten", "added", "memory"],"participant_activity": ["idle", "listening", "reciting"],"room_kind": ["main", "breakout"],"session_status": ["planned", "live", "ended"],"verse_result": ["validated", "review"],"verse_status": ["new", "learning", "acquired", "review"]
           }
         }
 } as const

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter, Link, Navigate, Outlet, Route, Routes } from 'react-router'
+import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { RequireAuth } from '@/features/auth/RequireAuth'
 import { useAuth } from '@/features/auth/store'
@@ -26,6 +26,7 @@ const StudentPage = lazy(() => import('@/features/classes/TeacherPages').then((m
 const MyProgressPage = lazy(() => import('@/features/classes/TeacherPages').then((m) => ({ default: m.MyProgressPage })))
 const SessionEditorPage = lazy(() => import('@/features/live/SessionPages').then((m) => ({ default: m.SessionEditorPage })))
 const LobbyPage = lazy(() => import('@/features/live/SessionPages').then((m) => ({ default: m.LobbyPage })))
+const RecapPage = lazy(() => import('@/features/live/RecapPage').then((m) => ({ default: m.RecapPage })))
 // panneau de visio : chargé seulement quand on entre dans une séance (LiveKit pèse lourd)
 const LiveDock = lazy(() => import('@/features/live/LiveDock').then((m) => ({ default: m.LiveDock })))
 const AdminPage = lazy(() => import('@/features/admin/AdminPage').then((m) => ({ default: m.AdminPage })))
@@ -54,6 +55,7 @@ export function App() {
           <Route path="/prof/eleve/:id" element={<RequireAuth roles={STAFF}><StudentPage /></RequireAuth>} />
           <Route path="/prof/seance/:id" element={<RequireAuth roles={STAFF}><SessionEditorPage /></RequireAuth>} />
           <Route path="/seance/:id" element={<RequireAuth><LobbyPage /></RequireAuth>} />
+          <Route path="/seance/:id/bilan" element={<RequireAuth><RecapPage /></RequireAuth>} />
           <Route path="/admin" element={<RequireAuth roles={['admin']}><AdminPage /></RequireAuth>} />
         </Route>
         <Route path="/labs" element={<LabsLayout />}>
@@ -72,14 +74,42 @@ export function App() {
 function LiveLayer() {
   const signedIn = useAuth((s) => s.status === 'signedIn')
   const sessionId = useLive((s) => s.sessionId)
+  const ended = useLive((s) => s.ended)
   useEffect(() => {
     if (signedIn) resumeLiveSession()
   }, [signedIn])
+  if (signedIn && !sessionId && ended) return <EndedNotice id={ended.id} title={ended.title} />
   if (!signedIn || !sessionId) return null
   return (
     <Suspense fallback={null}>
       <LiveDock />
     </Suspense>
+  )
+}
+
+/** Fin de séance : chacun reçoit son récapitulatif. */
+function EndedNotice({ id, title }: { id: string; title: string }) {
+  const { t } = useTranslation('live')
+  const navigate = useNavigate()
+  return (
+    <div role="status" className="fixed inset-x-0 bottom-4 z-50 mx-auto flex w-[min(30rem,calc(100vw-1rem))] items-center gap-3 rounded-xl border border-gold bg-card px-4 py-3 shadow-lg">
+      <p className="min-w-0 flex-1 text-sm">
+        <span className="font-semibold">{t('recap.ended')}</span> {title}
+      </p>
+      <button
+        type="button"
+        className="rounded-lg bg-green-deep px-3 py-2 text-sm font-medium text-white"
+        onClick={() => {
+          useLive.getState().dismissEnded()
+          navigate(`/seance/${id}/bilan`)
+        }}
+      >
+        {t('recap.see')}
+      </button>
+      <button type="button" className="text-sm text-muted-foreground underline" onClick={() => useLive.getState().dismissEnded()}>
+        {t('recap.close')}
+      </button>
+    </div>
   )
 }
 

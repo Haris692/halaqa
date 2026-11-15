@@ -1,4 +1,4 @@
-import { BookOpenText, DoorClosed, Hand, LogIn, Megaphone, Mic, Shuffle, SkipBack, SkipForward, Square, Undo2, Users } from 'lucide-react'
+import { BookOpenText, DoorClosed, Hand, ListChecks, LogIn, Megaphone, Mic, Shuffle, SkipBack, SkipForward, Square, Undo2, Users } from 'lucide-react'
 import { useEffect, useState, type DragEvent, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -27,6 +27,8 @@ import {
   type LiveRoom,
   type LiveState,
 } from '@/services/live'
+import { setShowSummary } from '@/services/tools'
+import { ErrorSummaryCard } from './ErrorSummary'
 import { myParticipant, useLive } from './store'
 
 /**
@@ -63,6 +65,7 @@ export function Dashboard() {
           <PlanControls state={state} run={run} onRoomsStep={() => setOpenRoomsDialog(true)} />
           <Talqin state={state} run={run} />
           <Rooms state={state} run={run} onOpenRooms={() => setOpenRoomsDialog(true)} />
+          <CommonReview state={state} run={run} />
           <Announce state={state} run={run} />
         </div>
         {openRoomsDialog && <OpenRoomsDialog state={state} run={run} onClose={() => setOpenRoomsDialog(false)} />}
@@ -380,6 +383,26 @@ function ParticipantChip({ p, state, run, now }: { p: LiveParticipant; state: Li
         </select>
       )}
     </li>
+  )
+}
+
+/** Retour commun : erreurs fréquentes relevées pendant les salles, affichables chez tous. */
+function CommonReview({ state, run }: { state: LiveState; run: Run }) {
+  const { t } = useTranslation('live')
+  const shown = state.session.show_summary
+  return (
+    <Section
+      title={t('summary.title')}
+      icon={<ListChecks className="size-4" />}
+      actions={
+        <Button size="sm" variant={shown ? 'default' : 'outline'} aria-pressed={shown} onClick={() => run(() => setShowSummary(state.session.id, !shown))}>
+          {shown ? t('summary.hide') : t('summary.show')}
+        </Button>
+      }
+    >
+      {shown && <p className="text-xs text-green-deep">{t('summary.shown')}</p>}
+      <ErrorSummaryCard sessionId={state.session.id} />
+    </Section>
   )
 }
 

@@ -56,7 +56,7 @@ export function SessionsCard({ classId }: { classId: string }) {
           <ul className="flex flex-col divide-y divide-border">
             {sessions.value.map((s) => (
               <li key={s.id} className="flex items-center gap-2 py-2">
-                <Link to={s.status === 'live' ? `/seance/${s.id}` : `/prof/seance/${s.id}`} className="min-w-0 flex-1 rounded-md px-1 py-1 hover:bg-muted">
+                <Link to={s.status === 'live' ? `/seance/${s.id}` : s.status === 'ended' ? `/seance/${s.id}/bilan` : `/prof/seance/${s.id}`} className="min-w-0 flex-1 rounded-md px-1 py-1 hover:bg-muted">
                   <p className="truncate font-medium">{s.title || t('sessions.untitled')}</p>
                   <p className="text-xs text-muted-foreground">{dateFmt.format(new Date(s.started_at ?? s.created_at))}</p>
                 </Link>

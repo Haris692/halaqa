@@ -24,7 +24,7 @@ export interface MushafPageViewProps {
   selectedVerse?: VerseKey | null
   /** en glyphes V2, « première lettre » n'est pas possible : traité comme « estompé » */
   mask?: MaskLevel
-  wordClass?: (id: WordId) => string | undefined
+  wordClass?: ((id: WordId) => string | undefined) | undefined
   onWordClick?: (id: WordId, event: React.MouseEvent) => void
   onVerseNumberClick?: (key: VerseKey) => void
 }

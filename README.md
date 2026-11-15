@@ -3,7 +3,7 @@
 Plateforme d'apprentissage du Coran en ligne : séances en direct, salles de travail, outils du professeur, travail entre les séances.
 Spécification : [prompt-claude-code-halaqa.md](prompt-claude-code-halaqa.md) · Architecture : [docs/architecture.md](docs/architecture.md).
 
-**État : phase 3 (séance en direct), en attente de validation.** Comptes rendus : [phase 0](docs/phase-0.md) · [phase 1](docs/phase-1.md) · [phase 2](docs/phase-2.md) · [phase 3](docs/phase-3.md).
+**État : phase 4 (outils du prof : vue partagée, crayon, corrections, récapitulatif), en attente de validation.** Comptes rendus : [phase 0](docs/phase-0.md) · [phase 1](docs/phase-1.md) · [phase 2](docs/phase-2.md) · [phase 3](docs/phase-3.md) · [phase 4](docs/phase-4.md).
 Site de test : https://haris692.github.io/halaqa/
 
 ## Installation

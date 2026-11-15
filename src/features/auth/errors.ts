@@ -19,6 +19,8 @@ export function errorMessage(t: TFunction, error: unknown): string {
   if (/salle_inconnue|salle_fermee|pas_dans_une_salle/.test(msg)) return t('account:errors.roomGone')
   if (/LiveKit non configuré/.test(msg)) return t('account:errors.videoNotConfigured')
   if (/FunctionsFetchError|Failed to send a request to the Edge Function/i.test(msg)) return t('account:errors.video')
+  if (/aucun_verset/.test(msg)) return t('account:errors.noVerse')
+  if (/eleve_absent/.test(msg)) return t('account:errors.studentAbsent')
   if (/acces_refuse|permission denied|row-level security/i.test(msg)) return t('account:errors.forbidden')
   if (/failed to fetch|network/i.test(msg)) return t('account:errors.network')
   return t('account:errors.generic', { message: msg })

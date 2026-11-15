@@ -25,6 +25,8 @@ export interface ReadingViewProps {
   /** n'afficher que ces versets (mode entraînement) */
   verseRange?: [number, number]
   showHeader?: boolean
+  /** classes supplémentaires par mot (marquages, corrections de la séance) */
+  wordClass?: ((id: WordId) => string | undefined) | undefined
   onWordClick?: (id: WordId, event: React.MouseEvent) => void
   onVerseNumberClick?: (key: VerseKey) => void
 }
@@ -81,6 +83,7 @@ export const ReadingView = forwardRef<ReadingViewHandle, ReadingViewProps>(funct
                 tajweed={props.tajweed}
                 ruleFilter={props.ruleFilter}
                 mask={mask}
+                wordClass={props.wordClass}
                 onWordClick={props.onWordClick}
                 onVerseNumberClick={props.onVerseNumberClick}
               />

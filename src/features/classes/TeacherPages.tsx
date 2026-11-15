@@ -25,6 +25,7 @@ import {
   removeMember,
   updateClass,
 } from '@/services/accounts'
+import { MySessionsList } from '@/features/live/RecapPage'
 
 /** Espace professeur : ses classes. */
 export function TeacherHomePage() {
@@ -324,6 +325,7 @@ export function MyProgressPage() {
     <PageShell title={t('myProgress')} wide>
       <p className="text-sm text-muted-foreground">{t('progress.intro')}</p>
       <ProgressBoard studentId={profile.id} editor="student" />
+      <MySessionsList />
     </PageShell>
   )
 }

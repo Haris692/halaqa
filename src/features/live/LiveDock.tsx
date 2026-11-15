@@ -28,7 +28,7 @@ import {
   VideoOff,
   Volume2,
 } from 'lucide-react'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
@@ -38,6 +38,9 @@ import { useAuth } from '@/features/auth/store'
 import { errorMessage } from '@/features/auth/errors'
 import { cn } from '@/lib/utils'
 import { chooseRoom, liveToken, updateMe, type LiveParticipant, type LiveState } from '@/services/live'
+import { useBoard } from './board'
+import { announceJoin, attachRoom, BUS_TOPIC, deliver, onMessage, publish } from './bus'
+import { ErrorSummaryCard } from './ErrorSummary'
 import { myParticipant, useLive } from './store'
 
 const Dashboard = lazy(() => import('./Dashboard').then((m) => ({ default: m.Dashboard })))
@@ -84,6 +87,20 @@ export function LiveDock() {
       alive = false
     }
   }, [sessionId, roomId, t])
+
+  // tableau de la salle (traits, marquages, corrections) : rechargé à chaque changement de salle
+  useEffect(() => {
+    if (roomId) void useBoard.getState().enter(roomId)
+    else useBoard.getState().reset()
+  }, [roomId])
+  useEffect(() => {
+    const off = onMessage((m, from) => useBoard.getState().receive(m, from))
+    return () => {
+      off()
+      useBoard.getState().reset()
+    }
+  }, [])
+  useBoardDefaults(state, roomId, teacher)
 
   // raccourci clavier du tableau de bord (prof) : Alt+D
   useEffect(() => {
@@ -162,10 +179,12 @@ export function LiveDock() {
             className="flex flex-col"
           >
             <RoomAudioRenderer />
+            <RoomBridge />
             <PermissionWatcher />
             {dockOpen && state && <Tiles state={state} />}
             {dockOpen && state && me && <RoomChooser state={state} me={me} />}
             {dockOpen && state && <FocusVerse state={state} />}
+            {dockOpen && state?.session.show_summary && !teacher && <ErrorSummaryCard sessionId={state.session.id} compact />}
             <Controls state={state} me={me} teacher={teacher} />
           </LiveKitRoom>
         ) : (
@@ -179,6 +198,58 @@ export function LiveDock() {
       )}
     </>
   )
+}
+
+/**
+ * Relie la salle LiveKit au relais de messages du lecteur (traits, vue partagée, corrections).
+ * À chaque connexion (et changement de salle), on redemande la vue de chacun.
+ */
+function RoomBridge() {
+  const room = useRoomContext()
+  useEffect(() => {
+    attachRoom({
+      identity: room.localParticipant.identity,
+      send: (data) => room.localParticipant.publishData(data, { reliable: true, topic: BUS_TOPIC }),
+    })
+    const onData = (payload: Uint8Array, participant?: { identity: string }, _kind?: unknown, topic?: string) =>
+      deliver(payload, participant?.identity, topic)
+    const onConnected = () => {
+      publish({ t: 'view-request' })
+      announceJoin()
+    }
+    room.on(RoomEvent.DataReceived, onData)
+    room.on(RoomEvent.ParticipantConnected, announceJoin)
+    room.on(RoomEvent.Connected, onConnected)
+    if (room.state === ConnectionState.Connected) onConnected()
+    return () => {
+      room.off(RoomEvent.DataReceived, onData)
+      room.off(RoomEvent.ParticipantConnected, announceJoin)
+      room.off(RoomEvent.Connected, onConnected)
+      attachRoom(null)
+    }
+  }, [room])
+  return null
+}
+
+/**
+ * Prof : en entrant dans une salle secondaire, il voit la vue du premier élève et corrige
+ * celui-ci ; en salle principale, il corrige l'élève qui a la parole (talqîn).
+ */
+function useBoardDefaults(state: LiveState | null, roomId: string | null, teacher: boolean) {
+  const applied = useRef<string | null>(null)
+  const room = state?.rooms.find((r) => r.id === roomId)
+  const first = state?.participants.find((p) => p.room_id === roomId && !p.is_teacher)?.user_id ?? null
+  const floor = state?.session.floor_user ?? null
+  useEffect(() => {
+    if (!teacher || !room) return
+    if (room.kind === 'breakout' && first && applied.current !== room.id) {
+      applied.current = room.id
+      useBoard.getState().set({ followChoice: first, focusStudent: first })
+    }
+  }, [teacher, room, first])
+  useEffect(() => {
+    if (teacher && room?.kind === 'main' && floor) useBoard.getState().set({ focusStudent: floor })
+  }, [teacher, room?.kind, floor])
 }
 
 function StepTimer({ state }: { state: LiveState }) {

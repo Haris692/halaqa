@@ -167,6 +167,8 @@
     "sessionClosed": "La séance n'est pas (ou plus) ouverte.",
     "roomFull": "Cette salle est pleine : choisissez-en une autre.",
     "roomsAssigned": "Le professeur répartit lui-même les salles.",
+    "noVerse": "Aucun verset appris ni passage du jour pour cet élève : indiquez un passage dans le plan de séance.",
+    "studentAbsent": "Cet élève n'est pas dans la séance.",
     "roomGone": "Cette salle vient d'être fermée : vous revenez en salle principale.",
     "video": "Le service de visio ne répond pas. Réessayez dans un instant ; si ça continue, prévenez votre professeur.",
     "videoNotConfigured": "La visio n'est pas encore branchée sur ce site. Le plan, les salles, les mains levées et les annonces fonctionnent déjà."

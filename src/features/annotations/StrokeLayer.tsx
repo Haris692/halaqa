@@ -31,14 +31,17 @@ export function StrokeLayer({
   geometry,
   now,
   selfAuthor,
+  isStudentAuthor = (author) => author === 'eleve',
 }: {
   strokes: readonly Stroke[]
   geometry: ReadonlyMap<string, StrokeGeometry>
   now: number
   selfAuthor: string
+  /** traits d'élève (binôme, crayon autorisé) : dessinés en pointillé */
+  isStudentAuthor?: (author: string) => boolean
 }) {
   return (
-    <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden>
+    <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden data-testid="strokes">
       <defs>
         <filter id="laser-glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="3" result="blur" />
@@ -57,7 +60,7 @@ export function StrokeLayer({
         )
         const isLaser = s.style.tool === 'laser'
         // marquages du binôme / de l'élève : visuellement distincts de ceux du prof
-        const fromStudent = s.author === 'eleve'
+        const fromStudent = isStudentAuthor(s.author)
         return (
           <path
             key={s.id}
