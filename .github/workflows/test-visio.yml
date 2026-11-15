@@ -1,0 +1,108 @@
+# Teste la visio de production depuis un réseau extérieur (machine GitHub) :
+# deux navigateurs rejoignent une salle de test, l'un publie caméra + micro simulés,
+# l'autre vérifie qu'il reçoit bien la vidéo et le son à travers le serveur LiveKit.
+# Jetons de courte durée, salle jetable : générés par scripts/serveur/test-visio.ps1.
+name: Test visio
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Adresse wss du serveur LiveKit
+        required: true
+      token_pub:
+        description: Jeton du participant qui publie
+        required: true
+      token_sub:
+        description: Jeton du participant qui regarde
+        required: true
+
+jobs:
+  visio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Masquer les jetons
+        run: |
+          echo "::add-mask::${{ inputs.token_pub }}"
+          echo "::add-mask::${{ inputs.token_sub }}"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer Playwright
+        run: |
+          npm init -y > /dev/null
+          npm install --no-audit --no-fund @playwright/test@1.65.1
+          npx playwright install --with-deps chromium
+      - name: Connexion, publication et réception
+        env:
+          LK_URL: ${{ inputs.url }}
+          TOKEN_PUB: ${{ inputs.token_pub }}
+          TOKEN_SUB: ${{ inputs.token_sub }}
+        run: |
+          cat > visio.mjs <<'EOF'
+          import { chromium } from '@playwright/test'
+          const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] })
+          const html = `<script type="module">
+            import * as LK from 'https://cdn.jsdelivr.net/npm/livekit-client@2.24.1/+esm'
+            window.LK = LK
+            window.ready = true
+          </script>`
+          async function client(token, publish) {
+            const ctx = await browser.newContext({ permissions: ['camera', 'microphone'] })
+            const page = await ctx.newPage()
+            page.on('console', (m) => console.log(publish ? '[pub]' : '[sub]', m.text()))
+            await page.route('https://visio.test/', (r) => r.fulfill({ contentType: 'text/html', body: html }))
+            await page.goto('https://visio.test/')
+            await page.waitForFunction(() => window.ready)
+            await page.evaluate(async ({ url, token, publish }) => {
+              const room = new window.LK.Room()
+              window.room = room
+              const t0 = performance.now()
+              await room.connect(url, token)
+              console.log('connecté en', Math.round(performance.now() - t0), 'ms')
+              if (publish) {
+                await room.localParticipant.setCameraEnabled(true)
+                await room.localParticipant.setMicrophoneEnabled(true)
+                console.log('caméra et micro publiés')
+              }
+            }, { url: process.env.LK_URL, token, publish })
+            return page
+          }
+          const pub = await client(process.env.TOKEN_PUB, true)
+          const sub = await client(process.env.TOKEN_SUB, false)
+          let result = null
+          for (let i = 0; i < 30 && !result; i++) {
+            await new Promise((r) => setTimeout(r, 1000))
+            result = await sub.evaluate(async () => {
+              const out = {}
+              for (const p of window.room.remoteParticipants.values()) {
+                for (const pub of p.trackPublications.values()) {
+                  const track = pub.track
+                  if (!track) continue
+                  const stats = await track.receiver?.getStats()
+                  let bytes = 0, frames = 0
+                  stats?.forEach((s) => { if (s.type === 'inbound-rtp') { bytes += s.bytesReceived ?? 0; frames += s.framesDecoded ?? 0 } })
+                  out[pub.kind] = { bytes, frames }
+                }
+              }
+              return out.video?.frames > 30 && out.audio?.bytes > 5000 ? out : null
+            })
+          }
+          const pair = await sub.evaluate(async () => {
+            const pc = window.room.engine.pcManager?.subscriber?.pc ?? window.room.engine.pcManager?.subscriber?._pc
+            if (!pc) return 'inconnu'
+            const stats = await pc.getStats()
+            let pairId, local, remote
+            stats.forEach((s) => { if (s.type === 'transport') pairId = s.selectedCandidatePairId })
+            stats.forEach((s) => { if (s.id === pairId) { local = s.localCandidateId; remote = s.remoteCandidateId } })
+            const c = {}
+            stats.forEach((s) => { if (s.id === local || s.id === remote) c[s.id === local ? 'local' : 'remote'] = `${s.candidateType} ${s.protocol} ${s.address ?? ''}:${s.port ?? ''}` })
+            return c
+          }).catch(() => 'inconnu')
+          console.log('chemin réseau :', JSON.stringify(pair))
+          await browser.close()
+          if (!result) { console.log('ÉCHEC : vidéo ou son non reçus'); process.exit(1) }
+          console.log('RÉUSSI : reçu', JSON.stringify(result))
+          EOF
+          node visio.mjs
